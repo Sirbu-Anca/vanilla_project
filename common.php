@@ -1,7 +1,7 @@
 <?php
 require_once 'config.php';
 
-function getConnectionToDB()
+function getDbConnection()
 {
     try {
         $connection = new PDO("mysql:host=".SERVER_NAME.";dbname=".DB_NAME."", USERNAME, PASSWORD);
