@@ -1,11 +1,14 @@
 <?php
 require_once 'config.php';
 
-function connectionToDB()
+function getConnectionToDB()
 {
     try {
-       return $connection = new PDO("'msql:host= SERVER_NAME';dbname=DB_NAME", USERNAME, PASSWORD);
+        $connection = new PDO("mysql:host=".SERVER_NAME.";dbname=".DB_NAME."", USERNAME, PASSWORD);
+        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $connection;
+
     }catch (PDOException $exception) {
-        echo 'Connection fail: ' . $exception->getMessage();
+        echo 'Connection failed: ' . $exception->getMessage();
     }
 }
