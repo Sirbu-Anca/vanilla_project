@@ -2,6 +2,12 @@
 session_start();
 require_once('common.php');
 $connection = getDbConnection();
+$inputErrors = [];
+$inputData = [
+    'name'            => '',
+    'contactDetails'  => '',
+    'comments'        => '',
+];
 
 if (isset($_GET['add_id'])) {
     $_SESSION['cart'][$_GET['add_id']] = $_GET['add_id'];
@@ -20,10 +26,24 @@ if (empty($cart)) {
     die();
 }
 $ids_arr = str_repeat('?,', count($cart) - 1) . '?';
-
 $stm = $connection->prepare("SELECT * FROM products WHERE id IN (" . $ids_arr . ")");
 $stm->execute($cart);
 $cart_products = $stm->fetchAll(PDO::FETCH_OBJ);
+
+if (!empty($cart_products)) {
+    if (isset($_POST['name']) && isset($_POST['contactDetails'])) {
+        $inputData['name'] = strip_tags($_POST['name']);
+        if (strlen($inputData['name']) < 3) {
+            $inputErrors['nameError'] = 'The name should have more then 2 letters.';
+        }
+        $inputData['contactDetails'] = strip_tags($_POST['contactDetails']);
+        if (!filter_var($inputData['contactDetails'], FILTER_VALIDATE_EMAIL)) {
+            $inputErrors['contactDetailsError'] = 'Invalid email address!';
+        }
+        $inputData['comments'] = strip_tags($_POST['comments']);
+    }
+}
+
 ?>
 <html>
 <head>
@@ -36,7 +56,6 @@ $cart_products = $stm->fetchAll(PDO::FETCH_OBJ);
 <body>
 <table border="1px solid black">
     <tr>
-        <th>id</th>
         <th>Image</th>
         <th>Title</th>
         <th>Description</th>
@@ -45,7 +64,6 @@ $cart_products = $stm->fetchAll(PDO::FETCH_OBJ);
     </tr>
     <?php foreach ($cart_products as $product) { ?>
         <tr>
-            <td><?php echo $product->id ?></td>
             <td><img src="" alt="image"></td>
             <td><?php echo $product->title ?></td>
             <td><?php echo $product->description ?></td>
@@ -58,10 +76,14 @@ $cart_products = $stm->fetchAll(PDO::FETCH_OBJ);
 </table>
 <br>
 <form action="" method="post">
-    <input type="text" name="name" placeholder="Name"><br><br>
-    <textarea name="contact_details" id="" cols="22" rows="2" placeholder="Contact details"></textarea><br><br>
-    <textarea name="comments" id="comm" cols="22" rows="3" placeholder="Comments"></textarea><br><br>
-    <a href="index.php">Go to index</a><input type="button" name="button" value="Checkout">
+    <input type="text" name="name" placeholder="Name" value="<?php echo $inputData['name'] ?>">
+    <span><?php echo isset($inputErrors['nameError']) ? $inputErrors['nameError'] : '';?></span>
+    <br><br>
+    <input type="text" name="contactDetails" placeholder="Contact details" value="<?php echo $inputData['contactDetails']?>">
+    <span><?php echo isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : '';?></span>
+    <br><br>
+    <textarea name="comments" id="comm" cols="22" rows="3" placeholder="Comments"> </textarea><br><br>
+    <a href="index.php">Go to index</a><input type="submit" name="button" value="Checkout">
 </form>
 </body>
 </html>
