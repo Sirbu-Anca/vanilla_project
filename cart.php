@@ -14,6 +14,11 @@ if (isset($_GET['remove_id'])) {
 }
 
 $cart = array_values($_SESSION['cart']);
+if (empty($cart)) {
+    echo "You don't have any product in your cart!<br>";
+    echo '<a href="index.php">Go to index</a>';
+    die();
+}
 $ids_arr = str_repeat('?,', count($cart) - 1) . '?';
 
 $stm = $connection->prepare("SELECT * FROM products WHERE id IN (" . $ids_arr . ")");
