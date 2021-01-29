@@ -1,5 +1,7 @@
 <?php
+
 require_once 'config.php';
+session_start();
 
 function getDbConnection()
 {

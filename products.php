@@ -1,6 +1,6 @@
 <?php
+
 require_once 'common.php';
-session_start();
 checkForAuthentication();
 $connection = getDbConnection();
 
@@ -25,13 +25,14 @@ $products = $stm->fetchAll(PDO::FETCH_OBJ);
 $connection = null;
 
 ?>
+
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?php echo translate('Products') ?></title>
+    <title><?= translate('Products') ?></title>
     <style>
         table {
             border: 1px solid black;
@@ -48,32 +49,32 @@ $connection = null;
 </head>
 <body>
 <table>
-    <?php foreach ($products as $product) { ?>
+    <?php foreach ($products as $product) : ?>
         <tr>
             <td>
                 <img src="" alt="image">
             </td>
             <td>
-                <?php echo $product->title ?><br>
-                <?php echo $product->description ?><br>
-                <?php echo $product->price . ' ' . translate('eur') ?><br>
+                <?= $product->title ?><br>
+                <?= $product->description ?><br>
+                <?= $product->price . ' ' . translate('eur') ?><br>
             </td>
             <td><a href="">Edit</a></td>
             <td>
                 <form action="products.php" method="post"
                 ">
-                <input type="hidden" name="deleteItem" value="<?php echo $product->id; ?>">
+                <input type="hidden" name="deleteItem" value="<?= $product->id; ?>">
                 <input type="submit" value="Delete">
                 </form>
             </td>
         </tr>
-        <?php
-    }
+    <?php
+    endforeach;
     ?>
     <tr>
         <td id="bottom" colspan="4">
-            <a href="product.php"><?php echo translate('Add') ?></a>
-            <a href="products.php?logout=logout"><?php echo translate('Logout') ?></a>
+            <a href="product.php"><?= translate('Add') ?></a>
+            <a href="products.php?logout=logout"><?= translate('Logout') ?></a>
         </td>
     </tr>
 </table>

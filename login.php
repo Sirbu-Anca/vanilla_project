@@ -1,6 +1,6 @@
 <?php
+
 require_once 'common.php';
-session_start();
 
 if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['USERNAME']) {
     header('Location: products.php');
@@ -31,6 +31,7 @@ if (isset($_POST['submit'])) {
 }
 
 ?>
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -42,15 +43,15 @@ if (isset($_POST['submit'])) {
 <body>
 <form action="login.php" method="post">
     <input type="text" name="username" placeholder="Username"
-           value="<?php echo isset($inputData['username']) ? $inputData['username'] : ''; ?>">
-    <span><?php echo isset($inputErrors['usernameError']) ? $inputErrors['usernameError'] : ''; ?></span>
+           value="<?= isset($inputData['username']) ? $inputData['username'] : ''; ?>">
+    <span><?= isset($inputErrors['usernameError']) ? $inputErrors['usernameError'] : ''; ?></span>
     <br><br>
     <input type="password" name="password" placeholder="Password"
-           value="<?php echo isset($inputData['password']) ? $inputData['password'] : ""; ?>">
-    <span><?php echo isset($inputErrors['passwordError']) ? $inputErrors['passwordError'] : ''; ?></span>
+           value="<?= isset($inputData['password']) ? $inputData['password'] : ""; ?>">
+    <span><?= isset($inputErrors['passwordError']) ? $inputErrors['passwordError'] : ''; ?></span>
     <br><br>
     <input type="submit" name="submit" value="Login">
-    <span><?php echo isset($inputErrors['failedMessage']) ? $inputErrors['failedMessage'] : ''; ?></span>
+    <span><?= isset($inputErrors['failedMessage']) ? $inputErrors['failedMessage'] : ''; ?></span>
 </form>
 
 </body>

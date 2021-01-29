@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 require_once('common.php');
 $connection = getDbConnection();
 $inputErrors = [];
@@ -64,13 +64,14 @@ if (count($cart_products) > 0) {
     }
 }
 ?>
+
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?php echo translate('Cart') ?></title>
+    <title><?= translate('Cart') ?></title>
     <style>
         table {
             border: 1px solid #000000;
@@ -83,34 +84,34 @@ if (count($cart_products) > 0) {
 </head>
 <body>
 <table>
-    <?php foreach ($cart_products as $product) { ?>
+    <?php foreach ($cart_products as $product) : ?>
         <tr>
             <td>
                 <img src="" alt="image">
             </td>
             <td>
-                <?php echo $product->title ?><br>
-                <?php echo $product->description ?><br>
-                <?php echo $product->price . ' ' . translate('eur') ?> <br><br>
+                <?= $product->title ?><br>
+                <?= $product->description ?><br>
+                <?= $product->price . ' ' . translate('eur') ?> <br><br>
             </td>
             <td>
-                <a href="cart.php?remove_id=<?php echo $product->id ?>"><?php echo translate('Remove') ?></a>
+                <a href="cart.php?remove_id=<?= $product->id ?>"><?= translate('Remove') ?></a>
             </td>
         </tr>
-        <?php
-    }
+    <?php
+    endforeach;
     ?>
     <br>
     <tr>
         <td colspan="3">
             <form action="" method="post">
-                <input type="text" name="name" placeholder="Name" value="<?php echo $inputData['name'] ?>">
+                <input type="text" name="name" placeholder="Name" value="<?= $inputData['name'] ?>">
                 <span>
-                <?php echo isset($inputErrors['nameError']) ? $inputErrors['nameError'] : ''; ?>
+                <?= isset($inputErrors['nameError']) ? $inputErrors['nameError'] : ''; ?>
             </span>
                 <br><br>
-                <input type="text" name="contactDetails" placeholder="<?php echo translate('Contact details') ?>"
-                       value="<?php echo $inputData['contactDetails'] ?>">
+                <input type="text" name="contactDetails" placeholder="<?= translate('Contact details') ?>"
+                       value="<?= $inputData['contactDetails'] ?>">
                 <span>
                 <?php echo isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
             </span>
