@@ -3,7 +3,7 @@ require_once 'common.php';
 session_start();
 
 if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['USERNAME']) {
-    header('location:products.php');
+    header('Location: products.php');
     die();
 }
 $inputData = [];
@@ -23,7 +23,7 @@ if (isset($_POST['submit'])) {
     if (!count($inputErrors)) {
         if ($inputData['username'] == ADMIN_CREDENTIALS['USERNAME'] && $inputData['password'] == ADMIN_CREDENTIALS['PASSWORD']) {
             $_SESSION['username'] = $inputData['username'];
-            header('location:products.php');
+            header('Location: products.php');
             die();
         }
         $inputErrors['failedMessage'] = 'Wrong username and password';
