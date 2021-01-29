@@ -107,18 +107,19 @@ if (count($cart_products) > 0) {
             <form action="" method="post">
                 <input type="text" name="name" placeholder="Name" value="<?= $inputData['name'] ?>">
                 <span>
-                <?= isset($inputErrors['nameError']) ? $inputErrors['nameError'] : ''; ?>
-            </span>
+                    <?= isset($inputErrors['nameError']) ? $inputErrors['nameError'] : ''; ?>
+                </span>
                 <br><br>
                 <input type="text" name="contactDetails" placeholder="<?= translate('Contact details') ?>"
                        value="<?= $inputData['contactDetails'] ?>">
                 <span>
-                <?php echo isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
-            </span>
+                    <?php echo isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
+                </span>
                 <br><br>
                 <textarea name="comments" id="comm" cols="22" rows="3"
                           placeholder="<?php echo translate('Comments') ?>">
-            </textarea><br><br>
+                </textarea
+                <br><br>
                 <a href="index.php"><?php echo translate('Go to index') ?></a>
                 <input type="submit" name="button" value="Checkout">
             </form>
