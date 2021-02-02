@@ -23,10 +23,10 @@ require_once 'common.php';
 </head>
 <body>
 <table>
-    <?php foreach ($cart_products as $product) : ?>
+    <?php foreach ($cartProducts as $product) : ?>
         <tr>
             <td>
-                <img src="" alt="image">
+                <img src="<?= $product->image?>" alt="image" width="100" height="100">
             </td>
             <td>
                 <?= $product->title ?><br>
