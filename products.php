@@ -59,7 +59,7 @@ $connection = null;
     <?php foreach ($products as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $product->image ?>" alt="image">
+                <img src="<?= $product->image ?>" alt="image" width="100" height="100">
             </td>
             <td>
                 <?= $product->title ?><br>
