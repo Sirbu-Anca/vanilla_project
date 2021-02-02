@@ -12,9 +12,16 @@ if (isset($_GET['logout'])) {
 
 if (isset($_POST['deleteItem'])) {
     $productToBeDeleted = $_POST['deleteItem'];
-    $sql = $connection->prepare('DELETE FROM products where id=:id');
-    $sql->bindParam(':id', $productToBeDeleted, PDO::PARAM_INT);
-    $sql->execute();
+    $stm = $connection->prepare('SELECT image FROM products WHERE id= ?');
+    $stm->execute([$productToBeDeleted]);
+    $product = $stm->fetch(PDO::FETCH_OBJ);
+
+    $sql = $connection->prepare('DELETE FROM products WHERE id= ?');
+    $sql->execute([$productToBeDeleted]);
+
+    if (isset($product->image) && file_exists($product->image)) {
+        unlink($product->image);
+    }
     header('Location: products.php');
     die();
 }
@@ -52,19 +59,18 @@ $connection = null;
     <?php foreach ($products as $product) : ?>
         <tr>
             <td>
-                <img src="" alt="image">
+                <img src="<?= $product->image ?>" alt="image">
             </td>
             <td>
                 <?= $product->title ?><br>
                 <?= $product->description ?><br>
                 <?= $product->price . ' ' . translate('eur') ?><br>
             </td>
-            <td><a href="">Edit</a></td>
+            <td><a href="product.php?editProduct=<?= $product->id ?>">Edit</a></td>
             <td>
-                <form action="products.php" method="post"
-                ">
-                <input type="hidden" name="deleteItem" value="<?= $product->id; ?>">
-                <input type="submit" value="Delete">
+                <form action="products.php" method="post">
+                    <input type="hidden" name="deleteItem" value="<?= $product->id; ?>">
+                    <input type="submit" value="Delete">
                 </form>
             </td>
         </tr>
