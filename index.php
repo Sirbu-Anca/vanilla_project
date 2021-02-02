@@ -2,16 +2,13 @@
 
 require_once 'common.php';
 $connection = getDbConnection();
-$cart = null;
+$cart = [];
 $sql = 'SELECT * FROM products';
 
 if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     $cart = array_values($_SESSION['cart']);
     $ids_arr = str_repeat('?,', count($cart) - 1) . '?';
     $sql = $sql . ' WHERE id NOT IN (' . $ids_arr . ')';
-    $stm = $connection->prepare($sql);
-    $stm->execute($cart);
-    $products = $stm->fetchAll(PDO::FETCH_OBJ);
 }
 $stm = $connection->prepare($sql);
 $stm->execute($cart);
@@ -45,7 +42,7 @@ $products = $stm->fetchAll(PDO::FETCH_OBJ);
     <?php foreach ($products as $product) : ?>
         <tr>
             <td>
-                <img src="" alt="image">
+                <img src="<?= $product->image?>" alt="image" width="100" height="100">
             </td>
             <td>
                 <?= $product->title ?><br>
