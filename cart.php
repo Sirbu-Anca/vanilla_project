@@ -26,20 +26,20 @@ if (!isset($_SESSION['cart'])) {
     die();
 }
 
-$cart_products = [];
+$cartProducts = [];
 
 if (count($_SESSION['cart']) > 0) {
     $cart = array_values($_SESSION['cart']);
     $ids_arr = str_repeat('?,', count($cart) - 1) . '?';
     $stm = $connection->prepare("SELECT * FROM products WHERE id IN (" . $ids_arr . ")");
     $stm->execute($cart);
-    $cart_products = $stm->fetchAll(PDO::FETCH_OBJ);
+    $cartProducts = $stm->fetchAll(PDO::FETCH_OBJ);
 }
 
 $to = "test@gmail.com";
 $subject = "HTML email";
 
-if (count($cart_products) > 0) {
+if (count($cartProducts) > 0) {
     if (isset($_POST['name']) && isset($_POST['contactDetails'])) {
         $inputData['name'] = strip_tags($_POST['name']);
         if (strlen($inputData['name']) < 3) {
@@ -57,6 +57,15 @@ if (count($cart_products) > 0) {
             $headers = "MIME-Version: 1.0" . "\r\n";
             $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
             $headers .= "From: " . SHOP_MANAGER_EMAIL . "\r\n";
+
+            $creationDate = date('Y-m-d H-i-s');
+            $sql = $connection->prepare('INSERT INTO order_details (creation_date, name, address, comments) VALUES( ?, ?, ?, ?)');
+            $sql->execute([$creationDate, $inputData['name'], $inputData['contactDetails'], $inputData['comments']]);
+            $lastId = $connection->lastInsertId();
+            foreach ($cartProducts as $cartProduct) {
+                $sql = $connection->prepare('INSERT INTO orders (id_order, id_product) VALUES (?, ?)');
+                $sql->execute([$lastId, $cartProduct->id]);
+            }
             mail($to, $subject, $emailPage, $headers);
             unset($_SESSION['cart']);
             header('Location: index.php');
@@ -84,10 +93,10 @@ if (count($cart_products) > 0) {
 </head>
 <body>
 <table>
-    <?php foreach ($cart_products as $product) : ?>
+    <?php foreach ($cartProducts as $product) : ?>
         <tr>
             <td>
-                <img src="" alt="image">
+                <img src="<?= $product->image ?>" alt="image" width="100" height="100">
             </td>
             <td>
                 <?= $product->title ?><br>
