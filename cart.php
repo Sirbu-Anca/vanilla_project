@@ -86,6 +86,7 @@ if (!count($cartProducts)) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<h4><?= translate('Your cart')?></h4>
 <table>
     <?php foreach ($cartProducts as $product) : ?>
         <tr>

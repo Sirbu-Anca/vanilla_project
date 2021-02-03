@@ -43,6 +43,7 @@ $connection = null;
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<h3><?= translate('All products') ?></h3>
 <table>
     <?php foreach ($products as $product) : ?>
         <tr>

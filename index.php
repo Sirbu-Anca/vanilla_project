@@ -25,7 +25,6 @@ $products = $stm->fetchAll(PDO::FETCH_OBJ);
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <table>
     <?php foreach ($products as $product) : ?>
         <tr>

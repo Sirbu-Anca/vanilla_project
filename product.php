@@ -35,7 +35,6 @@ if (isset($_POST['save'])) {
             $inputErrors['priceError'] = translate('Please enter a natural number for product price.');
         }
     }
-
     if (isset($_FILES['image']) && $_FILES['image']['tmp_name']) {
         $inputData['imageLocation'] = $_FILES['image']['tmp_name'];
         $inputData['imageName'] = $_FILES['image']['name'];
@@ -99,6 +98,7 @@ if (isset($_POST['save'])) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<h3><?= translate('Add your product details')?></h3>
 <form action="" method="post" enctype="multipart/form-data">
     <input type="text" name="title" placeholder="<?= translate('Title') ?>"
            value="<?= $inputData['title'] ?>">
