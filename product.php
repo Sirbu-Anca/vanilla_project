@@ -1,7 +1,7 @@
 <?php
 
 require_once 'common.php';
-//checkForAuthentication();
+checkForAuthentication();
 $connection = getDbConnection();
 
 $editProduct = (!isset($_GET['editProduct']) ? 0 : $_GET['editProduct']);
@@ -29,7 +29,7 @@ if (isset($_POST['save'])) {
     } else {
         $inputErrors['descriptionError'] = translate('Please enter a product description.');
     }
-    if (isset($_POST['price']) && $_POST['price']) {
+    if (isset($_POST['price'])) {
         $inputData['price'] = $_POST['price'];
         if (!is_numeric($_POST['price']) || intval($_POST['PRICE'])) {
             $inputErrors['priceError'] = translate('Please enter a natural number for product price.');
@@ -45,10 +45,11 @@ if (isset($_POST['save'])) {
         }
     }
 
+    $pathImage = 'uploads/' . time() . $inputData['imageName'];
     if (!count($inputErrors)) {
         if (!$editProduct) {
-            $pathImage = 'uploads/' . time() . $inputData['imageName'];
-            $sql = $connection->prepare('INSERT INTO products (title, description, price, image) VALUES( ?, ?, ?, ?)');
+            $sql = $connection->prepare(
+                    'INSERT INTO products (title, description, price, image) VALUES( ?, ?, ?, ?)');
             $sql->execute([$inputData['title'], $inputData['description'], $inputData['price'], $pathImage]);
             move_uploaded_file($inputData['imageLocation'], $pathImage);
             header('Location: products.php');
@@ -56,7 +57,7 @@ if (isset($_POST['save'])) {
         } else {
             if (isset($product->image) && $inputData['imageName'] == imagePath($product->image)) {
                 $sql = 'UPDATE products SET title= ?, description= ?, price= ? WHERE id= ?';
-                $params = [
+                $parameters = [
                     $inputData['title'],
                     $inputData['description'],
                     $inputData['price'],
@@ -64,8 +65,7 @@ if (isset($_POST['save'])) {
                 ];
             } else {
                 $sql = 'UPDATE products SET title= ?, description= ?, price= ?, image= ? WHERE id= ?';
-                $pathImage = 'uploads/' . time() . $inputData['imageName'];
-                $params = [
+                $parameters = [
                     $inputData['title'],
                     $inputData['description'],
                     $inputData['price'],
@@ -74,9 +74,7 @@ if (isset($_POST['save'])) {
                 ];
             }
             $updateProduct = $connection->prepare($sql);
-            $updateProduct->execute($params);
-
-            $pathImage = 'uploads/' . time() . $inputData['imageName'];
+            $updateProduct->execute($parameters);
 
             if (!(isset($product->image) && $inputData['imageName'] == imagePath($product->image))) {
                 move_uploaded_file($inputData['imageLocation'], $pathImage);
@@ -97,36 +95,37 @@ if (isset($_POST['save'])) {
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add product</title>
+    <title><?=translate('Add product')?></title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <form action="" method="post" enctype="multipart/form-data">
     <input type="text" name="title" placeholder="<?= translate('Title') ?>"
            value="<?= $inputData['title'] ?>">
-    <span>
+    <span id="error">
         <?= isset($inputErrors['titleError']) ? $inputErrors['titleError'] : ''; ?>
     </span>
     <br><br>
     <input type="text" name="description" placeholder="<?= translate('Description') ?>"
            value="<?= $inputData['description'] ?>">
-    <span>
+    <span id="error">
         <?= isset($inputErrors['descriptionError']) ? $inputErrors['descriptionError'] : ''; ?>
     </span>
     <br><br>
     <input type="number" name="price" placeholder="<?= translate('Price') ?> " min="0" step="any"
            value="<?= $inputData['price'] ?>">
-    <span>
+    <span id="error">
         <?= isset($inputErrors['priceError']) ? $inputErrors['priceError'] : '' ?>
     </span>
     <br><br>
     <input type="file" id="image" name="image" placeholder="<?= translate('Image') ?>">
-    <span>
+    <span id="error">
         <?= isset($inputErrors['imageNameError']) ? $inputErrors['imageNameError'] : '' ?>
     </span>
     <br><br>
-    <a href="products.php">Products</a>
+    <a href="products.php"><?= translate('Products') ?></a>
     &nbsp;
-    <input type="submit" name="save" value="Save">
+    <input type="submit" name="save" value="<?= translate('Save')?>">
 </form>
 
 </body>
