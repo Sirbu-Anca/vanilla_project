@@ -3,12 +3,13 @@
 require_once 'common.php';
 checkForAuthentication();
 $connection = getDbConnection();
-
+$inputErrors = [];
 $editProduct = (!isset($_GET['editProduct']) ? 0 : $_GET['editProduct']);
 
 $stm = $connection->prepare('SELECT * FROM products WHERE id= ?');
 $stm->execute([$editProduct]);
 $product = $stm->fetch(PDO::FETCH_OBJ);
+
 $inputData = [
     'title' => (isset($product->title) && isset($editProduct)) ? $product->title : '',
     'description' => (isset($product->description) && isset($editProduct)) ? $product->description : '',
@@ -16,25 +17,26 @@ $inputData = [
     'imageName' => (isset($product->image) && isset($editProduct)) ? imagePath($product->image) : '',
 ];
 
-$inputErrors = [];
-
 if (isset($_POST['save'])) {
     if (isset($_POST['title']) && $_POST['title']) {
         $inputData['title'] = $_POST['title'];
     } else {
         $inputErrors['titleError'] = translate('Please enter a product title.');
     }
+
     if (isset($_POST['description']) && $_POST['description']) {
         $inputData['description'] = $_POST['description'];
     } else {
         $inputErrors['descriptionError'] = translate('Please enter a product description.');
     }
+
     if (isset($_POST['price'])) {
         $inputData['price'] = $_POST['price'];
-        if (!is_numeric($_POST['price']) || intval($_POST['PRICE'])) {
+        if (!is_numeric($_POST['price']) || !intval($_POST['price'])) {
             $inputErrors['priceError'] = translate('Please enter a natural number for product price.');
         }
     }
+
     if (isset($_FILES['image']) && $_FILES['image']['tmp_name']) {
         $inputData['imageLocation'] = $_FILES['image']['tmp_name'];
         $inputData['imageName'] = $_FILES['image']['name'];
