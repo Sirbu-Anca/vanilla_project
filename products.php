@@ -40,33 +40,21 @@ $connection = null;
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?= translate('Products') ?></title>
-    <style>
-        table {
-            border: 1px solid black;
-        }
-
-        td {
-            text-align: left;
-        }
-
-        #bottom {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <table>
     <?php foreach ($products as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $product->image ?>" alt="image" width="100" height="100">
+                <img src="<?= $product->image ?>" alt="image">
             </td>
             <td>
                 <?= $product->title ?><br>
                 <?= $product->description ?><br>
                 <?= $product->price . ' ' . translate('eur') ?><br>
             </td>
-            <td><a href="product.php?editProduct=<?= $product->id ?>">Edit</a></td>
+            <td><a href="product.php?editProduct=<?= $product->id ?>"><?= translate('Edit')?></a></td>
             <td>
                 <form action="products.php" method="post">
                     <input type="hidden" name="deleteItem" value="<?= $product->id; ?>">
