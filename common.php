@@ -28,3 +28,10 @@ function checkForAuthentication()
         die();
     }
 }
+
+function imagePath($pathName)
+{
+    $path = strstr($pathName, '/');
+    return substr($path, 1 );
+
+}
