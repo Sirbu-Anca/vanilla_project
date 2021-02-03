@@ -59,9 +59,10 @@ if (count($cartProducts) > 0) {
             $sql = $connection->prepare('INSERT INTO order_details (creation_date, name, address, comments) VALUES( ?, ?, ?, ?)');
             $sql->execute([$creationDate, $inputData['name'], $inputData['contactDetails'], $inputData['comments']]);
             $lastId = $connection->lastInsertId();
+
             foreach ($cartProducts as $cartProduct) {
-                $sql = $connection->prepare('INSERT INTO orders (id_order, id_product) VALUES (?, ?)');
-                $sql->execute([$lastId, $cartProduct->id]);
+                $sql = $connection->prepare('INSERT INTO order_products (id_order, id_product, product_price) VALUES (?, ?, ?)');
+                $sql->execute([$lastId, $cartProduct->id, $cartProduct->price]);
             }
             mail($to, $subject, $emailPage, $headers);
             unset($_SESSION['cart']);
