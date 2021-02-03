@@ -22,19 +22,7 @@ $products = $stm->fetchAll(PDO::FETCH_OBJ);
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?= translate('Products') ?></title>
-    <style>
-        table {
-            border: 1px solid black;
-        }
-
-        td {
-            text-align: left;
-        }
-
-        #bottom {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -42,7 +30,7 @@ $products = $stm->fetchAll(PDO::FETCH_OBJ);
     <?php foreach ($products as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $product->image?>" alt="image" width="100" height="100">
+                <img src="<?= $product->image?>" alt="image">
             </td>
             <td>
                 <?= $product->title ?><br>
