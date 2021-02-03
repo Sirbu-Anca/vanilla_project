@@ -2,6 +2,8 @@
 
 require_once('common.php');
 $connection = getDbConnection();
+$to = 'test@gmail.com';
+$subject = 'HTML email';
 $inputErrors = [];
 $inputData = [
     'name' => '',
@@ -18,6 +20,10 @@ if (isset($_GET['add_id'])) {
 if (isset($_GET['remove_id'])) {
     unset($_SESSION['cart'][$_GET['remove_id']]);
 }
+if (!isset($_SESSION['cart'])) {
+    header('Location: index.php');
+    die();
+}
 
 $cartProducts = [];
 
@@ -29,8 +35,6 @@ if (count($_SESSION['cart']) > 0) {
     $cartProducts = $stm->fetchAll(PDO::FETCH_OBJ);
 }
 
-$to = 'test@gmail.com';
-$subject = 'HTML email';
 
 if (count($cartProducts) > 0) {
     if (isset($_POST['name']) && isset($_POST['contactDetails'])) {
@@ -64,11 +68,12 @@ if (count($cartProducts) > 0) {
             header('Location: index.php');
         }
     }
-} else {
+}
+
+if (!count($cartProducts)) {
     header('Location: index.php');
     die();
 }
-
 ?>
 
 <html>
