@@ -10,23 +10,14 @@ require_once 'common.php';
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?= translate('Email') ?></title>
-    <style>
-        table {
-            width: 10%;
-            border: 1px solid black;
-        }
-
-        td {
-            text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <table>
     <?php foreach ($cartProducts as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $product->image?>" alt="image" width="100" height="100">
+                <img src="<?= $product->image?>" alt="image" >
             </td>
             <td>
                 <?= $product->title ?><br>

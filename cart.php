@@ -19,7 +19,6 @@ if (isset($_GET['remove_id'])) {
     unset($_SESSION['cart'][$_GET['remove_id']]);
 }
 
-
 if (!isset($_SESSION['cart'])) {
     echo 'Your cart is empty!<br>';
     echo '<a href="index.php">' . translate('Go to index') . '</a>';
@@ -81,22 +80,14 @@ if (count($cartProducts) > 0) {
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?= translate('Cart') ?></title>
-    <style>
-        table {
-            border: 1px solid #000000;
-        }
-
-        td {
-            text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <table>
     <?php foreach ($cartProducts as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $product->image ?>" alt="image" width="100" height="100">
+                <img src="<?= $product->image ?>" alt="image">
             </td>
             <td>
                 <?= $product->title ?><br>
@@ -115,13 +106,13 @@ if (count($cartProducts) > 0) {
         <td colspan="3">
             <form action="" method="post">
                 <input type="text" name="name" placeholder="Name" value="<?= $inputData['name'] ?>">
-                <span>
+                <span id="error">
                     <?= isset($inputErrors['nameError']) ? $inputErrors['nameError'] : ''; ?>
                 </span>
                 <br><br>
                 <input type="text" name="contactDetails" placeholder="<?= translate('Contact details') ?>"
                        value="<?= $inputData['contactDetails'] ?>">
-                <span>
+                <span id="error">
                     <?php echo isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
                 </span>
                 <br><br>
