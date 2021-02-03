@@ -6,7 +6,7 @@ session_start();
 function getDbConnection()
 {
     try {
-        $connection = new PDO("mysql:host=" . SERVER_NAME . ";dbname=" . DB_NAME . "", USERNAME, PASSWORD);
+        $connection = new PDO('mysql:host=' . SERVER_NAME . ';dbname=' . DB_NAME . '', USERNAME, PASSWORD);
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $connection;
 

@@ -24,13 +24,13 @@ $cartProducts = [];
 if (count($_SESSION['cart']) > 0) {
     $cart = array_values($_SESSION['cart']);
     $ids_arr = str_repeat('?,', count($cart) - 1) . '?';
-    $stm = $connection->prepare("SELECT * FROM products WHERE id IN (" . $ids_arr . ")");
+    $stm = $connection->prepare('SELECT * FROM products WHERE id IN (' . $ids_arr . ')');
     $stm->execute($cart);
     $cartProducts = $stm->fetchAll(PDO::FETCH_OBJ);
 }
 
-$to = "test@gmail.com";
-$subject = "HTML email";
+$to = 'test@gmail.com';
+$subject = 'HTML email';
 
 if (count($cartProducts) > 0) {
     if (isset($_POST['name']) && isset($_POST['contactDetails'])) {
@@ -47,9 +47,9 @@ if (count($cartProducts) > 0) {
             ob_start();
             include 'mail.cart.php';
             $emailPage = ob_get_clean();
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $headers .= "From: " . SHOP_MANAGER_EMAIL . "\r\n";
+            $headers = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type:text/html;charset=UTF-8' . "\r\n";
+            $headers .= 'From: ' . SHOP_MANAGER_EMAIL . "\r\n";
 
             $creationDate = date('Y-m-d H-i-s');
             $sql = $connection->prepare('INSERT INTO order_details (creation_date, name, address, comments) VALUES( ?, ?, ?, ?)');
