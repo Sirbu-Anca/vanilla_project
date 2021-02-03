@@ -38,20 +38,27 @@ if (isset($_POST['submit'])) {
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login page</title>
+    <title><?= translate('Login') ?></title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <form action="login.php" method="post">
     <input type="text" name="username" placeholder="Username"
            value="<?= isset($inputData['username']) ? $inputData['username'] : ''; ?>">
-    <span><?= isset($inputErrors['usernameError']) ? $inputErrors['usernameError'] : ''; ?></span>
+    <span id="error">
+        <?= isset($inputErrors['usernameError']) ? $inputErrors['usernameError'] : ''; ?>
+    </span>
     <br><br>
     <input type="password" name="password" placeholder="Password"
            value="<?= isset($inputData['password']) ? $inputData['password'] : ""; ?>">
-    <span><?= isset($inputErrors['passwordError']) ? $inputErrors['passwordError'] : ''; ?></span>
+    <span id="error">
+        <?= isset($inputErrors['passwordError']) ? $inputErrors['passwordError'] : ''; ?>
+    </span>
     <br><br>
     <input type="submit" name="submit" value="Login">
-    <span><?= isset($inputErrors['failedMessage']) ? $inputErrors['failedMessage'] : ''; ?></span>
+    <span id="error">
+        <?= isset($inputErrors['failedMessage']) ? $inputErrors['failedMessage'] : ''; ?>
+    </span>
 </form>
 
 </body>
