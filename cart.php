@@ -19,12 +19,6 @@ if (isset($_GET['remove_id'])) {
     unset($_SESSION['cart'][$_GET['remove_id']]);
 }
 
-if (!isset($_SESSION['cart'])) {
-    echo 'Your cart is empty!<br>';
-    echo '<a href="index.php">' . translate('Go to index') . '</a>';
-    die();
-}
-
 $cartProducts = [];
 
 if (count($_SESSION['cart']) > 0) {
@@ -70,7 +64,11 @@ if (count($cartProducts) > 0) {
             header('Location: index.php');
         }
     }
+} else {
+    header('Location: index.php');
+    die();
 }
+
 ?>
 
 <html>
