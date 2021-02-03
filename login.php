@@ -13,12 +13,12 @@ if (isset($_POST['submit'])) {
     if ($_POST['username']) {
         $inputData['username'] = strip_tags($_POST['username']);
     } else {
-        $inputErrors['usernameError'] = 'Enter a username';
+        $inputErrors['usernameError'] = translate('Enter a username');
     }
     if ($_POST['password']) {
         $inputData['password'] = strip_tags($_POST['password']);
     } else {
-        $inputErrors['passwordError'] = 'Enter a password';
+        $inputErrors['passwordError'] = translate('Enter a password');
     }
     if (!count($inputErrors)) {
         if ($inputData['username'] == ADMIN_CREDENTIALS['USERNAME'] && $inputData['password'] == ADMIN_CREDENTIALS['PASSWORD']) {
@@ -26,7 +26,7 @@ if (isset($_POST['submit'])) {
             header('Location: products.php');
             die();
         }
-        $inputErrors['failedMessage'] = 'Wrong username and password';
+        $inputErrors['failedMessage'] = translate('Wrong username and password');
     }
 }
 
@@ -43,13 +43,13 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
 <form action="login.php" method="post">
-    <input type="text" name="username" placeholder="Username"
+    <input type="text" name="username" placeholder="<?= translate('Username') ?>"
            value="<?= isset($inputData['username']) ? $inputData['username'] : ''; ?>">
     <span id="error">
         <?= isset($inputErrors['usernameError']) ? $inputErrors['usernameError'] : ''; ?>
     </span>
     <br><br>
-    <input type="password" name="password" placeholder="Password"
+    <input type="password" name="password" placeholder="<?= translate('Password') ?>"
            value="<?= isset($inputData['password']) ? $inputData['password'] : ""; ?>">
     <span id="error">
         <?= isset($inputErrors['passwordError']) ? $inputErrors['passwordError'] : ''; ?>
