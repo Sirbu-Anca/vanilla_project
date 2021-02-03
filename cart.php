@@ -40,11 +40,11 @@ if (count($cartProducts) > 0) {
     if (isset($_POST['name']) && isset($_POST['contactDetails'])) {
         $inputData['name'] = strip_tags($_POST['name']);
         if (strlen($inputData['name']) < 3) {
-            $inputErrors['nameError'] = 'The name should have more then 2 letters.';
+            $inputErrors['nameError'] = translate('The name should have more then 2 letters.');
         }
         $inputData['contactDetails'] = strip_tags($_POST['contactDetails']);
         if (!filter_var($inputData['contactDetails'], FILTER_VALIDATE_EMAIL)) {
-            $inputErrors['contactDetailsError'] = 'Invalid email address!';
+            $inputErrors['contactDetailsError'] = translate('Invalid email address!');
         }
         $inputData['comments'] = strip_tags($_POST['comments']);
         if (!count($inputErrors)) {

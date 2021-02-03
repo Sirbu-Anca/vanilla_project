@@ -17,7 +17,7 @@ require_once 'common.php';
     <?php foreach ($cartProducts as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $product->image?>" alt="image" >
+                <img src="<?='http://localhost/vanilla_project/' . $product->image?>" alt="image" >
             </td>
             <td>
                 <?= $product->title ?><br>
