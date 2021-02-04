@@ -20,6 +20,7 @@ if (isset($_GET['add_id'])) {
 if (isset($_GET['remove_id'])) {
     unset($_SESSION['cart'][$_GET['remove_id']]);
 }
+
 if (!isset($_SESSION['cart'])) {
     header('Location: index.php');
     die();
@@ -35,17 +36,18 @@ if (count($_SESSION['cart']) > 0) {
     $cartProducts = $stm->fetchAll(PDO::FETCH_OBJ);
 }
 
-
 if (count($cartProducts) > 0) {
     if (isset($_POST['name']) && isset($_POST['contactDetails'])) {
         $inputData['name'] = strip_tags($_POST['name']);
         if (strlen($inputData['name']) < 3) {
             $inputErrors['nameError'] = translate('The name should have more then 2 letters.');
         }
+
         $inputData['contactDetails'] = strip_tags($_POST['contactDetails']);
         if (!filter_var($inputData['contactDetails'], FILTER_VALIDATE_EMAIL)) {
             $inputErrors['contactDetailsError'] = translate('Invalid email address!');
         }
+
         $inputData['comments'] = strip_tags($_POST['comments']);
         if (!count($inputErrors)) {
             ob_start();
@@ -77,7 +79,7 @@ if (!count($cartProducts)) {
 }
 ?>
 
-<html>
+<html lang="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -110,21 +112,21 @@ if (!count($cartProducts)) {
     <tr>
         <td colspan="3">
             <form action="" method="post">
-                <input type="text" name="name" placeholder="Name" value="<?= $inputData['name'] ?>">
+                <input type="text" name="name" placeholder="Name" value="<?= $inputData['name'] ?>"><br>
                 <span id="error">
                     <?= isset($inputErrors['nameError']) ? $inputErrors['nameError'] : ''; ?>
                 </span>
-                <br><br>
+                <br>
                 <input type="text" name="contactDetails" placeholder="<?= translate('Contact details') ?>"
-                       value="<?= $inputData['contactDetails'] ?>">
+                       value="<?= $inputData['contactDetails'] ?>"><br>
                 <span id="error">
                     <?php echo isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
                 </span>
-                <br><br>
+                <br>
                 <textarea name="comments" id="comm" cols="22" rows="3"
                           placeholder="<?php echo translate('Comments') ?>">
-                </textarea
-                <br><br>
+                </textarea>
+                <br>
                 <a href="index.php"><?php echo translate('Go to index') ?></a>
                 <input type="submit" name="button" value="Checkout">
             </form>
