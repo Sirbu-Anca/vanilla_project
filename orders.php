@@ -7,8 +7,8 @@ $connection = getDbConnection();
 $sql = $connection->prepare(
 	'SELECT o_d.id, SUM(o_p.product_price) totalAmount
         FROM order_details o_d
-            JOIN order_products o_p ON o_d.id = o_p.id_order
-            JOIN products p ON o_p.id_product = p.id
+            INNER JOIN order_products o_p ON o_d.id = o_p.id_order
+            INNER JOIN products p ON o_p.id_product = p.id
         GROUP BY o_d.id');
 $sql->execute();
 $orders = $sql->fetchAll(PDO::FETCH_OBJ);
