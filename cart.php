@@ -3,7 +3,11 @@
 require_once('common.php');
 $connection = getDbConnection();
 $to = 'test@gmail.com';
-$subject = 'HTML email';
+$subject = 'HTML email-order';
+$headers = 'MIME-Version: 1.0' . "\r\n";
+$headers .= 'Content-type:text/html;charset=UTF-8' . "\r\n";
+$headers .= 'From: ' . SHOP_MANAGER_EMAIL . "\r\n";
+
 $inputErrors = [];
 $inputData = [
     'name' => '',
@@ -53,11 +57,8 @@ if (count($cartProducts) > 0) {
             ob_start();
             include 'mail.cart.php';
             $emailPage = ob_get_clean();
-            $headers = 'MIME-Version: 1.0' . "\r\n";
-            $headers .= 'Content-type:text/html;charset=UTF-8' . "\r\n";
-            $headers .= 'From: ' . SHOP_MANAGER_EMAIL . "\r\n";
-
             $creationDate = date('Y-m-d H-i-s');
+
             $sql = $connection->prepare('INSERT INTO order_details (creation_date, name, address, comments) VALUES( ?, ?, ?, ?)');
             $sql->execute([$creationDate, $inputData['name'], $inputData['contactDetails'], $inputData['comments']]);
             $lastId = $connection->lastInsertId();
