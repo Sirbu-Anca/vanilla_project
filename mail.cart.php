@@ -1,8 +1,3 @@
-<?php
-
-require_once 'common.php';
-?>
-
 <html lang="">
 <head>
     <meta charset="UTF-8">
