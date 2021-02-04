@@ -3,36 +3,36 @@
 require_once 'common.php';
 
 if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['USERNAME']) {
-    header('Location: products.php');
-    die();
+	header('Location: products.php');
+	die();
 }
 $inputData = [];
 $inputErrors = [];
 
 if (isset($_POST['submit'])) {
-    if ($_POST['username']) {
-        $inputData['username'] = strip_tags($_POST['username']);
-    } else {
-        $inputErrors['usernameError'] = translate('Enter a username');
-    }
-    if ($_POST['password']) {
-        $inputData['password'] = strip_tags($_POST['password']);
-    } else {
-        $inputErrors['passwordError'] = translate('Enter a password');
-    }
-    if (!count($inputErrors)) {
-        if ($inputData['username'] == ADMIN_CREDENTIALS['USERNAME'] && $inputData['password'] == ADMIN_CREDENTIALS['PASSWORD']) {
-            $_SESSION['username'] = $inputData['username'];
-            header('Location: products.php');
-            die();
-        }
-        $inputErrors['failedMessage'] = translate('Wrong username and password');
-    }
+	if ($_POST['username']) {
+		$inputData['username'] = strip_tags($_POST['username']);
+	} else {
+		$inputErrors['usernameError'] = translate('Enter a username');
+	}
+	if ($_POST['password']) {
+		$inputData['password'] = strip_tags($_POST['password']);
+	} else {
+		$inputErrors['passwordError'] = translate('Enter a password');
+	}
+	if (!count($inputErrors)) {
+		if ($inputData['username'] == ADMIN_CREDENTIALS['USERNAME'] && $inputData['password'] == ADMIN_CREDENTIALS['PASSWORD']) {
+			$_SESSION['username'] = $inputData['username'];
+			header('Location: products.php');
+			die();
+		}
+		$inputErrors['failedMessage'] = translate('Wrong username and password');
+	}
 }
 
 ?>
 
-<html>
+<html lang="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
