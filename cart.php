@@ -120,14 +120,14 @@ if (!count($cartProducts)) {
                 <input type="text" name="contactDetails" placeholder="<?= translate('Contact details') ?>"
                        value="<?= $inputData['contactDetails'] ?>"><br>
                 <span id="error">
-                    <?php echo isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
+                    <?= isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
                 </span>
                 <br>
                 <textarea name="comments" id="comm" cols="22" rows="3"
-                          placeholder="<?php echo translate('Comments') ?>">
+                          placeholder="<?= translate('Comments') ?>">
                 </textarea>
                 <br>
-                <a href="index.php"><?php echo translate('Go to index') ?></a>
+                <a href="index.php"><?= translate('Go to index') ?></a>
                 <input type="submit" name="button" value="Checkout">
             </form>
         </td>
