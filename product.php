@@ -4,17 +4,17 @@ require_once 'common.php';
 checkForAuthentication();
 $connection = getDbConnection();
 $inputErrors = [];
-$editProduct = (!isset($_GET['editProduct']) ? 0 : $_GET['editProduct']);
+$editProductId = (isset($_GET['editProduct']) ? $_GET['editProduct'] : 0);
 
 $stm = $connection->prepare('SELECT * FROM products WHERE id= ?');
-$stm->execute([$editProduct]);
+$stm->execute([$editProductId]);
 $product = $stm->fetch(PDO::FETCH_OBJ);
 
 $inputData = [
-	'title' => (isset($product->title) && isset($editProduct)) ? $product->title : '',
-	'description' => (isset($product->description) && isset($editProduct)) ? $product->description : '',
-	'price' => (isset($product->price) && isset($editProduct)) ? $product->price : '',
-	'imageName' => (isset($product->image) && isset($editProduct)) ? imagePath($product->image) : '',
+	'title' => (isset($product->title) && isset($editProductId)) ? $product->title : '',
+	'description' => (isset($product->description) && isset($editProductId)) ? $product->description : '',
+	'price' => (isset($product->price) && isset($editProductId)) ? $product->price : '',
+	'imageName' => (isset($product->image) && isset($editProductId)) ? imagePath($product->image) : '',
 ];
 
 if (isset($_POST['save'])) {
@@ -48,7 +48,7 @@ if (isset($_POST['save'])) {
 
 	$pathImage = 'uploads/' . time() . $inputData['imageName'];
 	if (!count($inputErrors)) {
-		if (!$editProduct) {
+		if (!$editProductId) {
 			$sql = $connection->prepare(
 				'INSERT INTO products (title, description, price, image) VALUES( ?, ?, ?, ?)');
 			$sql->execute([$inputData['title'], $inputData['description'], $inputData['price'], $pathImage]);
@@ -62,7 +62,7 @@ if (isset($_POST['save'])) {
 					$inputData['title'],
 					$inputData['description'],
 					$inputData['price'],
-					$editProduct,
+					$editProductId,
 				];
 			} else {
 				$sql = 'UPDATE products SET title= ?, description= ?, price= ?, image= ? WHERE id= ?';
@@ -71,7 +71,7 @@ if (isset($_POST['save'])) {
 					$inputData['description'],
 					$inputData['price'],
 					$pathImage,
-					$editProduct,
+					$editProductId,
 				];
 			}
 			$updateProduct = $connection->prepare($sql);
