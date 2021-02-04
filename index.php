@@ -15,7 +15,7 @@ $stm->execute($cart);
 $products = $stm->fetchAll(PDO::FETCH_OBJ);
 ?>
 
-<html>
+<html lang="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
