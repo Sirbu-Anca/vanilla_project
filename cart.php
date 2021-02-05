@@ -2,13 +2,7 @@
 
 require_once('common.php');
 $connection = getDbConnection();
-$to = 'test@gmail.com';
-$subject = 'HTML email-order';
-$headers = 'MIME-Version: 1.0' . "\r\n";
-$headers .= 'Content-type:text/html;charset=UTF-8' . "\r\n";
-$headers .= 'From: ' . SHOP_MANAGER_EMAIL . "\r\n";
 
-$inputErrors = [];
 $inputData = [
     'name' => '',
     'contactDetails' => '',
@@ -34,50 +28,55 @@ $cartProducts = [];
 
 if (count($_SESSION['cart']) > 0) {
     $cart = array_values($_SESSION['cart']);
-    $ids_arr = str_repeat('?,', count($cart) - 1) . '?';
+    $ids_arr = str_repeat('?, ', count($cart) - 1) . '?';
     $stm = $connection->prepare('SELECT * FROM products WHERE id IN (' . $ids_arr . ')');
     $stm->execute($cart);
     $cartProducts = $stm->fetchAll(PDO::FETCH_OBJ);
 }
+$inputErrors = [];
 
-if (count($cartProducts) > 0) {
-    if (isset($_POST['name']) && isset($_POST['contactDetails'])) {
+if (isset($_POST['submit'])) {
+    if (isset($_POST['name']) && $_POST['name']) {
         $inputData['name'] = strip_tags($_POST['name']);
+    } else {
         if (strlen($inputData['name']) < 3) {
             $inputErrors['nameError'] = translate('The name should have more then 2 letters.');
         }
+    }
 
+    if (isset($_POST['contactDetails']) && $_POST['contactDetails']) {
         $inputData['contactDetails'] = strip_tags($_POST['contactDetails']);
+    } else {
         if (!filter_var($inputData['contactDetails'], FILTER_VALIDATE_EMAIL)) {
             $inputErrors['contactDetailsError'] = translate('Invalid email address!');
         }
+    }
+    $inputData['comments'] = strip_tags($_POST['comments']);
+    if (!count($inputErrors)) {
+        ob_start();
+        include 'mail.cart.php';
+        $emailPage = ob_get_clean();
+        $to = 'test@gmail.com';
+        $subject = 'HTML email-order';
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type:text/html;charset=UTF-8' . "\r\n";
+        $headers .= 'From: ' . SHOP_MANAGER_EMAIL . "\r\n";
+        $creationDate = date('Y-m-d H:i:s');
 
-        $inputData['comments'] = strip_tags($_POST['comments']);
-        if (!count($inputErrors)) {
-            ob_start();
-            include 'mail.cart.php';
-            $emailPage = ob_get_clean();
-            $creationDate = date('Y-m-d H-i-s');
+        $sql = $connection->prepare('INSERT INTO order_details (creation_date, name, address, comments) VALUES( ?, ?, ?, ?)');
+        $sql->execute([$creationDate, $inputData['name'], $inputData['contactDetails'], $inputData['comments']]);
+        $lastId = $connection->lastInsertId();
 
-            $sql = $connection->prepare('INSERT INTO order_details (creation_date, name, address, comments) VALUES( ?, ?, ?, ?)');
-            $sql->execute([$creationDate, $inputData['name'], $inputData['contactDetails'], $inputData['comments']]);
-            $lastId = $connection->lastInsertId();
-
-            foreach ($cartProducts as $cartProduct) {
-                $sql = $connection->prepare('INSERT INTO order_products (id_order, id_product, product_price) VALUES (?, ?, ?)');
-                $sql->execute([$lastId, $cartProduct->id, $cartProduct->price]);
-            }
-            mail($to, $subject, $emailPage, $headers);
-            unset($_SESSION['cart']);
-            header('Location: index.php');
+        foreach ($cartProducts as $cartProduct) {
+            $sql = $connection->prepare('INSERT INTO order_products (order_id, product_id, product_price) VALUES (?, ?, ?)');
+            $sql->execute([$lastId, $cartProduct->id, $cartProduct->price]);
         }
+        mail($to, $subject, $emailPage, $headers);
+        unset($_SESSION['cart']);
+        header('Location: index.php');
     }
 }
 
-if (!count($cartProducts)) {
-    header('Location: index.php');
-    die();
-}
 ?>
 
 <html lang="">
@@ -90,7 +89,7 @@ if (!count($cartProducts)) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h4><?= translate('Your cart')?></h4>
+<h4><?= translate('Your cart') ?></h4>
 <table>
     <?php foreach ($cartProducts as $product) : ?>
         <tr>
@@ -100,15 +99,13 @@ if (!count($cartProducts)) {
             <td>
                 <?= $product->title ?><br>
                 <?= $product->description ?><br>
-                <?= $product->price . ' ' . translate('eur') ?> <br><br>
+                <?= $product->price ?> <?= translate(' eur') ?> <br><br>
             </td>
             <td>
                 <a href="cart.php?remove_id=<?= $product->id ?>"><?= translate('Remove') ?></a>
             </td>
         </tr>
-    <?php
-    endforeach;
-    ?>
+    <?php endforeach; ?>
     <br>
     <tr>
         <td colspan="3">
@@ -129,7 +126,7 @@ if (!count($cartProducts)) {
                 </textarea>
                 <br>
                 <a href="index.php"><?= translate('Go to index') ?></a>
-                <input type="submit" name="button" value="Checkout">
+                <button type="submit" name="submit"> <?= translate('Checkout') ?></button>
             </form>
         </td>
     </tr>

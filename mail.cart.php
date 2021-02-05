@@ -12,22 +12,20 @@
     <?php foreach ($cartProducts as $product) : ?>
         <tr>
             <td>
-                <img src="<?='http://localhost/vanilla_project/' . $product->image?>" alt="image" >
+                <img src="<?= $product->image ?>" alt="image" >
             </td>
             <td>
                 <?= $product->title ?><br>
                 <?= $product->description ?><br>
-                <?= $product->price . ' ' . translate('eur') ?> <br><br>
+                <?= $product->price ?><?= translate(' eur') ?> <br><br>
             </td>
         </tr>
-    <?php
-    endforeach;
-    ?>
+    <?php endforeach; ?>
     <tr>
         <td>
             <p>
                 <?= translate('Name') ?>
-                <?= translate($inputData['name']) ?>
+                <?= $inputData['name'] ?>
             </p>
         </td>
     </tr>
@@ -35,7 +33,7 @@
         <td>
             <p>
                 <?= translate('Contact details') ?>
-                <?= translate($inputData['contactDetails']) ?>
+                <?= $inputData['contactDetails'] ?>
             </p>
         </td>
     </tr>
@@ -43,7 +41,7 @@
         <td>
             <p>
                 <?= translate('Comments') ?>
-                <?= translate($inputData['comments']) ?>
+                <?= $inputData['comments'] ?>
             </p>
         </td>
     </tr>
