@@ -7,7 +7,7 @@ $sql = 'SELECT * FROM products';
 
 if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     $cart = array_values($_SESSION['cart']);
-    $ids_arr = str_repeat('?,', count($cart) - 1) . '?';
+    $ids_arr = str_repeat('?, ', count($cart) - 1) . '?';
     $sql = $sql . ' WHERE id NOT IN (' . $ids_arr . ')';
 }
 $stm = $connection->prepare($sql);
@@ -29,20 +29,18 @@ $products = $stm->fetchAll(PDO::FETCH_OBJ);
     <?php foreach ($products as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $product->image?>" alt="image">
+                <img src="<?= $product->image ?>" alt="image">
             </td>
             <td>
                 <?= $product->title ?><br>
                 <?= $product->description ?><br>
-                <?= $product->price . ' ' . translate('eur') ?> <br><br>
+                <?= $product->price ?><?= translate(' eur') ?> <br><br>
             </td>
             <td>
                 <a href="cart.php?add_id=<?= $product->id ?>"><?= translate('Add') ?></a>
             </td>
         </tr>
-    <?php
-    endforeach;
-    ?>
+    <?php endforeach; ?>
     <tr>
         <td id="bottom" colspan="3">
             <a href="cart.php"><?= translate('Go to cart') ?></a>
