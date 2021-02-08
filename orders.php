@@ -5,7 +5,7 @@ checkForAuthentication();
 $connection = getDbConnection();
 
 $sql = $connection->prepare(
-	'SELECT o.id, SUM(o_p.product_price) totalAmount
+    'SELECT o.id, SUM(o_p.product_price) totalAmount
         FROM orders o
             INNER JOIN order_products o_p ON o.id = o_p.order_id
             INNER JOIN products p ON o_p.product_id = p.id
@@ -14,7 +14,7 @@ $sql->execute();
 $orders = $sql->fetchAll(PDO::FETCH_OBJ);
 
 if (!count($orders)) {
-	die();
+    die();
 }
 ?>
 
@@ -35,22 +35,20 @@ if (!count($orders)) {
         <th><?= translate('Total amount') ?></th>
         <th><?= translate('Action') ?></th>
     </tr>
-	<?php foreach ($orders as $order) : ?>
-
+    <?php foreach ($orders as $order) : ?>
         <tr>
             <td>
-				<?= $order->id ?>
+                <?= $order->id ?>
             </td>
             <td>
-				<?= $order->totalAmount ?>
-				<?= translate("eur") ?>
+                <?= $order->totalAmount ?>
+                <?= translate("eur") ?>
             </td>
-
             <td>
                 <a href="order.php?orderId=<?= $order->id ?>"> <?= translate('Show order details') ?> </a>
             </td>
         </tr>
-	<?php endforeach; ?>
+    <?php endforeach; ?>
 </table>
 </body>
 </html>
