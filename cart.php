@@ -8,9 +8,8 @@ $inputData = [
     'contactDetails' => '',
     'comments' => '',
 ];
-
-if (isset($_GET['add_id'])) {
-    $_SESSION['cart'][$_GET['add_id']] = $_GET['add_id'];
+if (isset($_POST['add_id'])) {
+    $_SESSION['cart'][$_POST['add_id']] = $_POST['add_id'];
     header('Location: index.php');
     die();
 }
@@ -63,7 +62,7 @@ if (isset($_POST['submit'])) {
         $headers .= 'From: ' . SHOP_MANAGER_EMAIL . "\r\n";
         $creationDate = date('Y-m-d H:i:s');
 
-        $sql = $connection->prepare('INSERT INTO order_details (creation_date, name, address, comments) VALUES( ?, ?, ?, ?)');
+        $sql = $connection->prepare('INSERT INTO orders (creation_date, name, address, comments) VALUES( ?, ?, ?, ?)');
         $sql->execute([$creationDate, $inputData['name'], $inputData['contactDetails'], $inputData['comments']]);
         $lastId = $connection->lastInsertId();
 
@@ -111,13 +110,13 @@ if (isset($_POST['submit'])) {
         <td colspan="3">
             <form action="" method="post">
                 <input type="text" name="name" placeholder="Name" value="<?= $inputData['name'] ?>"><br>
-                <span id="error">
+                <span class="error">
                     <?= isset($inputErrors['nameError']) ? $inputErrors['nameError'] : ''; ?>
                 </span>
                 <br>
                 <input type="text" name="contactDetails" placeholder="<?= translate('Contact details') ?>"
                        value="<?= $inputData['contactDetails'] ?>"><br>
-                <span id="error">
+                <span class="error">
                     <?= isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
                 </span>
                 <br>
