@@ -2,10 +2,6 @@
 
 require_once 'common.php';
 
-if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['USERNAME']) {
-	header('Location: products.php');
-	die();
-}
 $inputData = [];
 $inputErrors = [];
 
@@ -21,7 +17,7 @@ if (isset($_POST['submit'])) {
 		$inputErrors['passwordError'] = translate('Enter a password');
 	}
 	if (!count($inputErrors)) {
-		if ($inputData['username'] == ADMIN_CREDENTIALS['USERNAME'] && $inputData['password'] == ADMIN_CREDENTIALS['PASSWORD']) {
+		if ($inputData['username'] === ADMIN_CREDENTIALS['username'] && $inputData['password'] === ADMIN_CREDENTIALS['password']) {
 			$_SESSION['username'] = $inputData['username'];
 			header('Location: products.php');
 			die();
@@ -45,18 +41,18 @@ if (isset($_POST['submit'])) {
 <form action="login.php" method="post">
     <input type="text" name="username" placeholder="<?= translate('Username') ?>"
            value="<?= isset($inputData['username']) ? $inputData['username'] : ''; ?>">
-    <span id="error">
+    <span class="error">
         <?= isset($inputErrors['usernameError']) ? $inputErrors['usernameError'] : ''; ?>
     </span>
     <br><br>
     <input type="password" name="password" placeholder="<?= translate('Password') ?>"
            value="<?= isset($inputData['password']) ? $inputData['password'] : ""; ?>">
-    <span id="error">
+    <span class="error">
         <?= isset($inputErrors['passwordError']) ? $inputErrors['passwordError'] : ''; ?>
     </span>
     <br><br>
-    <input type="submit" name="submit" value="Login">
-    <span id="error">
+    <button type="submit" name="submit"><?= translate('Login') ?></button>
+    <span class="error">
         <?= isset($inputErrors['failedMessage']) ? $inputErrors['failedMessage'] : ''; ?>
     </span>
 </form>
