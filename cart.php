@@ -120,9 +120,7 @@ if (isset($_POST['submit'])) {
                     <?= isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
                 </span>
                 <br>
-                <textarea name="comments" id="comm" cols="22" rows="3"
-                          placeholder="<?= translate('Comments') ?>">
-                </textarea>
+                <textarea name="comments" cols="22" rows="3" placeholder="<?= translate('Comments') ?>"></textarea>
                 <br>
                 <a href="index.php"><?= translate('Go to index') ?></a>
                 <button type="submit" name="submit"> <?= translate('Checkout') ?></button>
