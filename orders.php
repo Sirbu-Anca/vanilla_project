@@ -5,11 +5,11 @@ checkForAuthentication();
 $connection = getDbConnection();
 
 $sql = $connection->prepare(
-	'SELECT o_d.id, SUM(o_p.product_price) totalAmount
-        FROM order_details o_d
-            INNER JOIN order_products o_p ON o_d.id = o_p.id_order
-            INNER JOIN products p ON o_p.id_product = p.id
-        GROUP BY o_d.id');
+	'SELECT o.id, SUM(o_p.product_price) totalAmount
+        FROM orders o
+            INNER JOIN order_products o_p ON o.id = o_p.order_id
+            INNER JOIN products p ON o_p.product_id = p.id
+        GROUP BY o.id');
 $sql->execute();
 $orders = $sql->fetchAll(PDO::FETCH_OBJ);
 
