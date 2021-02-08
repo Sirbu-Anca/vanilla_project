@@ -1,4 +1,4 @@
-#error {
+.error {
     width: 50%;
     color: red;
 }
@@ -6,7 +6,7 @@ table {
     border-style: solid;
 }
 
-#bottom {
+.bottom {
     text-align: center;
 }
 

@@ -22,7 +22,7 @@ function translate($label)
 
 function checkForAuthentication()
 {
-    if (!isset($_SESSION['username']) && $_SESSION['username'] != ADMIN_CREDENTIALS['USERNAME']) {
+    if (!isset($_SESSION['username']) && $_SESSION['username'] !== ADMIN_CREDENTIALS['username']) {
         header('Location: login.php');
         die();
     }
@@ -30,7 +30,5 @@ function checkForAuthentication()
 
 function imagePath($pathName)
 {
-    $path = strstr($pathName, '/');
-    return substr($path, 1 );
-
+    return substr(strstr($pathName, '/'), 1);
 }
