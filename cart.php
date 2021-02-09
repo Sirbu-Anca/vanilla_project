@@ -3,11 +3,6 @@
 require_once('common.php');
 $connection = getDbConnection();
 
-$inputData = [
-    'name' => '',
-    'contactDetails' => '',
-    'comments' => '',
-];
 if (isset($_POST['add_id'])) {
     $_SESSION['cart'][$_POST['add_id']] = $_POST['add_id'];
     header('Location: index.php');
@@ -24,7 +19,6 @@ if (!isset($_SESSION['cart'])) {
 }
 
 $cartProducts = [];
-
 if (count($_SESSION['cart']) > 0) {
     $cart = array_values($_SESSION['cart']);
     $ids_arr = str_repeat('?, ', count($cart) - 1) . '?';
@@ -32,8 +26,13 @@ if (count($_SESSION['cart']) > 0) {
     $stm->execute($cart);
     $cartProducts = $stm->fetchAll(PDO::FETCH_OBJ);
 }
-$inputErrors = [];
 
+$inputData = [
+    'name' => '',
+    'contactDetails' => '',
+    'comments' => '',
+];
+$inputErrors = [];
 if (isset($_POST['submit'])) {
     if (isset($_POST['name']) && $_POST['name']) {
         $inputData['name'] = strip_tags($_POST['name']);
