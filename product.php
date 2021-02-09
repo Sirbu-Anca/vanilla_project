@@ -4,10 +4,9 @@ require_once 'common.php';
 checkForAuthentication();
 $connection = getDbConnection();
 
+$editProductId = null;
 if (isset($_GET['editProductId'])) {
     $editProductId = $_GET['editProductId'];
-} else {
-    $editProductId = null;
 }
 
 $product = new stdClass();
@@ -24,7 +23,7 @@ if (!empty($editProductId)) {
         die();
     }
 }
-
+var_dump($editProductId, isset($editProductId));
 $inputData = [
     'title' => isset($product->title) ? $product->title : '',
     'description' => isset($product->description) ? $product->description : '',
