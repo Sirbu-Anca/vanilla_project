@@ -23,7 +23,7 @@ if (!empty($editProductId)) {
         die();
     }
 }
-var_dump($editProductId, isset($editProductId));
+
 $inputData = [
     'title' => isset($product->title) ? $product->title : '',
     'description' => isset($product->description) ? $product->description : '',
