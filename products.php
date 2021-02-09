@@ -5,25 +5,25 @@ checkForAuthentication();
 $connection = getDbConnection();
 
 if (isset($_GET['logout'])) {
-	unset($_SESSION['username']);
-	header('Location: login.php');
-	die();
+    unset($_SESSION['username']);
+    header('Location: login.php');
+    die();
 }
 
 if (isset($_POST['deleteItem'])) {
-	$productToBeDeleted = $_POST['deleteItem'];
-	$stm = $connection->prepare('SELECT image FROM products WHERE id= ?');
-	$stm->execute([$productToBeDeleted]);
-	$product = $stm->fetch(PDO::FETCH_OBJ);
+    $productToBeDeleted = $_POST['deleteItem'];
+    $stm = $connection->prepare('SELECT image FROM products WHERE id= ?');
+    $stm->execute([$productToBeDeleted]);
+    $product = $stm->fetch(PDO::FETCH_OBJ);
 
-	$sql = $connection->prepare('DELETE FROM products WHERE id= ?');
-	$sql->execute([$productToBeDeleted]);
+    $sql = $connection->prepare('DELETE FROM products WHERE id= ?');
+    $sql->execute([$productToBeDeleted]);
 
-	if (isset($product->image) && file_exists($product->image)) {
-		unlink($product->image);
-	}
-	header('Location: products.php');
-	die();
+    if (isset($product->image) && file_exists($product->image)) {
+        unlink($product->image);
+    }
+    header('Location: products.php');
+    die();
 }
 
 $stm = $connection->prepare("SELECT * FROM products");
@@ -44,25 +44,25 @@ $connection = null;
 <body>
 <h3><?= translate('All products') ?></h3>
 <table>
-	<?php foreach ($products as $product) : ?>
+    <?php foreach ($products as $product) : ?>
         <tr>
             <td>
                 <img src="<?= $product->image ?>" alt="image">
             </td>
             <td>
-				<?= $product->title ?><br>
-				<?= $product->description ?><br>
-				<?= $product->price ?> <?= translate(' eur') ?><br>
+                <?= $product->title ?><br>
+                <?= $product->description ?><br>
+                <?= $product->price ?> <?= translate(' eur') ?><br>
             </td>
             <td><a href="product.php?editProductId=<?= $product->id ?>"><?= translate('Edit') ?></a></td>
             <td>
                 <form action="products.php" method="post">
                     <input type="hidden" name="deleteItem" value="<?= $product->id ?>">
-                    <button type="submit" name="delete"><?= translate('Delete')?></button>
+                    <button type="submit" name="delete"><?= translate('Delete') ?></button>
                 </form>
             </td>
         </tr>
-	<?php endforeach; ?>
+    <?php endforeach; ?>
     <tr>
         <td class="bottom" colspan="4">
             <a href="product.php"><?= translate('Add') ?></a>
