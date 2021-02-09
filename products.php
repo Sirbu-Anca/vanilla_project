@@ -30,7 +30,6 @@ $stm = $connection->prepare("SELECT * FROM products");
 $stm->execute();
 $products = $stm->fetchAll(PDO::FETCH_OBJ);
 $connection = null;
-
 ?>
 
 <html lang="">
@@ -53,21 +52,19 @@ $connection = null;
             <td>
 				<?= $product->title ?><br>
 				<?= $product->description ?><br>
-				<?= $product->price . ' ' . translate('eur') ?><br>
+				<?= $product->price ?> <?= translate(' eur') ?><br>
             </td>
-            <td><a href="product.php?editProduct=<?= $product->id ?>"><?= translate('Edit') ?></a></td>
+            <td><a href="product.php?editProductId=<?= $product->id ?>"><?= translate('Edit') ?></a></td>
             <td>
                 <form action="products.php" method="post">
                     <input type="hidden" name="deleteItem" value="<?= $product->id ?>">
-                    <input type="submit" value="Delete">
+                    <button type="submit" name="delete"><?= translate('Delete')?></button>
                 </form>
             </td>
         </tr>
-	<?php
-	endforeach;
-	?>
+	<?php endforeach; ?>
     <tr>
-        <td id="bottom" colspan="4">
+        <td class="bottom" colspan="4">
             <a href="product.php"><?= translate('Add') ?></a>
             <a href="products.php?logout=logout"><?= translate('Logout') ?></a>
         </td>
