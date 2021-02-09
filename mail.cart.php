@@ -12,7 +12,7 @@
     <?php foreach ($cartProducts as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $product->image ?>" alt="image" >
+                <img src="<?= $product->image ?>" alt="image">
             </td>
             <td>
                 <?= $product->title ?><br>
