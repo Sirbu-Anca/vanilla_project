@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $pathImage = 'uploads/' . time() . $_FILES['image']['name'];
+    $pathImage = 'uploads/' . time() . $inputData['imageName'];
     if (empty($_SESSION['inputErrors'])) {
         if (!$editProductId) {
             $sql = $connection->prepare(
