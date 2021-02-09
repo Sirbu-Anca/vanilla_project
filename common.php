@@ -10,7 +10,7 @@ function getDbConnection()
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $connection;
     } catch (PDOException $exception) {
-       return $exception->getMessage();
+        return $exception->getMessage();
     }
 }
 
