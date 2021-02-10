@@ -1,33 +1,41 @@
 <?php
 
-require_once 'common.php';
+require_once('common.php');
 checkForAuthentication();
 $connection = getDbConnection();
-$orderId = isset($_GET['orderId']) ? $_GET['orderId'] : 0;
+
+$orderId = $_GET['orderId'] ?? null;
 
 $sql = $connection->prepare(
     'SELECT
-                   p.id, 
-                   p.title, 
-                   p.description, 
-                   p.image, 
-                   o.name, 
-                   o.address,
-                   o.comments,
-                   o.creation_date,
-                   o_p.product_price
-        FROM order_products o_p 
-            INNER JOIN products p ON o_p.product_id = p.id 
-            INNER JOIN orders o ON o_p.order_id = o.id
+                   p.id,
+                   p.title,
+                   p.description,
+                   p.image,
+                   op.product_price
+        FROM order_products op
+            INNER JOIN products p ON op.product_id = p.id
+            INNER JOIN orders o ON op.order_id = o.id
         WHERE o.id = ?');
 $sql->execute([$orderId]);
-$orders = $sql->fetchAll();
+$products = $sql->fetchAll(PDO::FETCH_OBJ);
 
-if (!count($orders)) {
+$sql = $connection->prepare(
+    'SELECT
+            o.name,
+            o.address,
+            o.comments,
+            o.creation_date
+        FROM order_products op 
+            INNER JOIN orders o ON op.order_id = o.id
+        WHERE o.id = ?');
+$sql->execute([$orderId]);
+$order = $sql->fetch(PDO::FETCH_OBJ);
+
+if (!count($products)) {
     die();
 }
 ?>
-
 <html lang="">
 <head>
     <meta charset="UTF-8">
@@ -44,7 +52,7 @@ if (!count($orders)) {
         <td>
             <p>
                 <?= translate('Date: ') ?>
-                <?= isset($orders[0]['creation_date']) ? $orders[0]['creation_date'] : '' ?>
+                <?= isset($order->creation_date) ? $order->creation_date : '' ?>
             </p>
         </td>
     </tr>
@@ -52,7 +60,7 @@ if (!count($orders)) {
         <td>
             <p>
                 <?= translate('Name: ') ?>
-                <?= isset($orders[0]['name']) ? $orders[0]['name'] : '' ?>
+                <?= isset($order->name) ? $order->name : '' ?>
             </p>
         </td>
     </tr>
@@ -60,7 +68,7 @@ if (!count($orders)) {
         <td>
             <p>
                 <?= translate('Address: ') ?>
-                <?= isset($orders[0]['address']) ? $orders[0]['address'] : '' ?>
+                <?= isset($order->address) ? $order->address : '' ?>
             </p>
         </td>
     </tr>
@@ -68,22 +76,22 @@ if (!count($orders)) {
         <td>
             <p>
                 <?= translate('Comments: ') ?>
-                <?= isset($orders[0]['comments']) ? $orders[0]['comments'] : '' ?>
+                <?= isset($order->comments) ? $order->comments : '' ?>
             </p>
         </td>
     </tr>
-    <?php for ($i = 0; $i < count($orders); $i++) : ?>
+    <?php foreach ($products as $product) : ?>
         <tr>
             <td>
-                <img src="<?= $orders[$i]['image'] ?>" alt="image">
+                <img src="<?= $product->image ?>" alt="image">
             </td>
             <td>
-                <?= $orders[$i]['title'] ?><br>
-                <?= $orders[$i]['description'] ?><br>
-                <?= $orders[$i]['product_price'] ?><?= translate(' eur') ?> <br><br>
+                <?= $product->title ?><br>
+                <?= $product->description ?><br>
+                <?= $product->product_price ?><?= translate(' eur') ?> <br><br>
             </td>
         </tr>
-    <?php endfor; ?>
+    <?php endforeach; ?>
 </table>
 <a href="orders.php"><?= translate('Go to order list') ?></a>
 </body>
