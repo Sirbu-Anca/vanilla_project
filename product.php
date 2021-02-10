@@ -47,9 +47,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inputErrors['priceError'] = translate('Please enter a natural number for product price.');
     }
 
-    $product->image = $_FILES['image']['name'];
+
     if (!$editProductId && (!isset($_FILES['image']['tmp_name']) || !$_FILES['image']['tmp_name'])) {
         $inputErrors['imageNameError'] = translate('Please choose an image.');
+    }
+
+
+    if (isset($_FILES['image']['tmp_name'])) {
+        $check = getimagesize($_FILES['image']['tmp_name']);
+        if ($check === false) {
+            $inputErrors['imageNameError'] = translate('File is not an image');
+        }
+        $imageFileType = strtolower(pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION));
     }
 
     $pathImage = 'uploads/' . time() . $_FILES['image']['name'];
