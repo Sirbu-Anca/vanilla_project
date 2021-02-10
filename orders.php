@@ -1,14 +1,13 @@
 <?php
 
-require_once 'common.php';
+require_once('common.php');
 checkForAuthentication();
 $connection = getDbConnection();
 
 $sql = $connection->prepare(
-    'SELECT o.id, SUM(o_p.product_price) totalAmount
+    'SELECT o.id, SUM(op.product_price) totalAmount
         FROM orders o
-            INNER JOIN order_products o_p ON o.id = o_p.order_id
-            INNER JOIN products p ON o_p.product_id = p.id
+            INNER JOIN order_products op ON o.id = op.order_id
         GROUP BY o.id');
 $sql->execute();
 $orders = $sql->fetchAll(PDO::FETCH_OBJ);
