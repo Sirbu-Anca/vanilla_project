@@ -9,8 +9,8 @@ if (isset($_POST['add_id'])) {
     die();
 }
 
-if (isset($_GET['remove_id'])) {
-    unset($_SESSION['cart'][$_GET['remove_id']]);
+if (isset($_POST['removeItem'])) {
+    unset($_SESSION['cart'][$_POST['removeItem']]);
 }
 
 if (!isset($_SESSION['cart'])) {
@@ -100,7 +100,10 @@ if (isset($_POST['submit'])) {
                 <?= $product->price ?> <?= translate(' eur') ?> <br><br>
             </td>
             <td>
-                <a href="cart.php?remove_id=<?= $product->id ?>"><?= translate('Remove') ?></a>
+                <form action="cart.php" method="post">
+                    <input type="hidden" name="removeItem" value="<?= $product->id ?>">
+                    <button type="submit" name="delete"><?= translate('Remove') ?></button>
+                </form>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -110,13 +113,13 @@ if (isset($_POST['submit'])) {
             <form action="" method="post">
                 <input type="text" name="name" placeholder="Name" value="<?= $inputData['name'] ?>"><br>
                 <span class="error">
-                    <?= isset($inputErrors['nameError']) ? $inputErrors['nameError'] : ''; ?>
+                    <?= $inputErrors['nameError'] ?? ''; ?>
                 </span>
                 <br>
                 <input type="text" name="contactDetails" placeholder="<?= translate('Contact details') ?>"
                        value="<?= $inputData['contactDetails'] ?>"><br>
                 <span class="error">
-                    <?= isset($inputErrors['contactDetailsError']) ? $inputErrors['contactDetailsError'] : ''; ?>
+                    <?= $inputErrors['contactDetailsError'] ?? ''; ?>
                 </span>
                 <br>
                 <textarea name="comments" cols="22" rows="3" placeholder="<?= translate('Comments') ?>"></textarea>
