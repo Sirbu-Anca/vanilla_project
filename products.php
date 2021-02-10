@@ -1,11 +1,10 @@
 <?php
 
-require_once 'common.php';
+require_once ('common.php');
 checkForAuthentication();
 $connection = getDbConnection();
-
-if (isset($_GET['logout'])) {
-    unset($_SESSION['username']);
+if (isset($_POST['logout'])) {
+    unset($_SESSION['authenticated']);
     header('Location: login.php');
     die();
 }
@@ -64,9 +63,13 @@ $connection = null;
         </tr>
     <?php endforeach; ?>
     <tr>
-        <td class="bottom" colspan="4">
+        <td class="bottom" colspan="2">
             <a href="product.php"><?= translate('Add') ?></a>
-            <a href="products.php?logout=logout"><?= translate('Logout') ?></a>
+        </td>
+        <td colspan="2">
+            <form action="products.php" method="post">
+                <button type="submit" name="logout"><?= translate('Logout') ?> </button>
+            </form>
         </td>
     </tr>
 </table>
