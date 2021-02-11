@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 $product = new stdClass();
-
 if (!empty($editProductId)) {
     if (!is_numeric($editProductId)) {
         header('Location: products.php');
@@ -28,37 +27,41 @@ if (!empty($editProductId)) {
 
 $inputErrors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product->title = $_POST['title'];
     if (!isset($_POST['title']) || !$_POST['title']) {
         $inputErrors['titleError'] = translate('Please enter a product title.');
     }
 
-    $product->description = $_POST['description'];
     if (!isset($_POST['description']) || !$_POST['description']) {
         $inputErrors['descriptionError'] = translate('Please enter a product description.');
     }
 
-    $product->price = $_POST['price'];
     if (isset($_POST['price']) && $_POST['price']) {
         if (!is_numeric($_POST['price'])) {
             $inputErrors['priceError'] = translate('Please enter a natural number for product price.');
         }
     } else {
-        $inputErrors['priceError'] = translate('Please enter a natural number for product price.');
+        $inputErrors['priceError'] = translate('Please enter a number for product price.');
     }
-
 
     if (!$editProductId && (!isset($_FILES['image']['tmp_name']) || !$_FILES['image']['tmp_name'])) {
         $inputErrors['imageNameError'] = translate('Please choose an image.');
     }
 
-
-    if (isset($_FILES['image']['tmp_name'])) {
+    if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
         $check = getimagesize($_FILES['image']['tmp_name']);
         if ($check === false) {
             $inputErrors['imageNameError'] = translate('File is not an image');
         }
-        $imageFileType = strtolower(pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION));
+        if (isset($_FILES['image']['name']) && $_FILES['image']['name']) {
+            $imageFileType = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif" ) {
+                $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');
+            }
+        }
+        if ($_FILES['image']['size'] > 500000) {
+            $inputErrors['imageNameError'] =translate('Sorry, your file is too large.');
+        }
     }
 
     $pathImage = 'uploads/' . time() . $_FILES['image']['name'];
@@ -119,19 +122,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="hidden" name="editProductId" value="<?= $product->id ?? null ?>">
     <?php endif; ?>
     <input type="text" name="title" placeholder="<?= translate('Title') ?>"
-           value="<?= $product->title ?? ''; ?>">
+           value="<?= $_POST['title'] ?? $product->title ?? ''; ?>">
     <span class="error">
         <?= $inputErrors['titleError'] ?? ''; ?>
     </span>
     <br><br>
     <input type="text" name="description" placeholder="<?= translate('Description') ?>"
-           value="<?= $product->description ?? '' ?>">
+           value="<?= $_POST['description'] ?? $product->description ?? '' ?>">
     <span class="error">
         <?= $inputErrors['descriptionError'] ?? ''; ?>
     </span>
     <br><br>
     <input type="number" name="price" placeholder="<?= translate('Price') ?> " min="0" step="any"
-           value="<?= $product->price ?? '' ?>">
+           value="<?= $_POST['price'] ?? $product->price ?? '' ?>">
     <span class="error">
         <?= $inputErrors['priceError'] ?? '' ?>
     </span>
