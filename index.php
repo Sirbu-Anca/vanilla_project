@@ -1,6 +1,6 @@
 <?php
 
-require_once 'common.php';
+require_once ('common.php');
 $connection = getDbConnection();
 $cart = [];
 $sql = 'SELECT * FROM products';
