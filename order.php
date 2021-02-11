@@ -12,25 +12,25 @@ if (!$orderId || !is_numeric($orderId)) {
 
 $sql = $connection->prepare(
     'SELECT p.id,
-                  p.title,
-                  p.description,
-                  p.image,
-                  op.product_price
-           FROM order_products op
-                 INNER JOIN products p ON op.product_id = p.id
-                 INNER JOIN orders o ON op.order_id = o.id
-           WHERE o.id = ?');
+              p.title,
+              p.description,
+              p.image,
+              op.product_price
+       FROM order_products op
+            INNER JOIN products p ON op.product_id = p.id
+            INNER JOIN orders o ON op.order_id = o.id
+       WHERE o.id = ?');
 $sql->execute([$orderId]);
 $products = $sql->fetchAll(PDO::FETCH_OBJ);
 
 $sql = $connection->prepare(
     'SELECT o.name,
-                  o.address,
-                  o.comments,
-                  o.creation_date
-            FROM order_products op 
-                  INNER JOIN orders o ON op.order_id = o.id
-            WHERE o.id = ?');
+              o.address,
+              o.comments,
+              o.creation_date
+       FROM order_products op 
+              INNER JOIN orders o ON op.order_id = o.id
+       WHERE o.id = ?');
 $sql->execute([$orderId]);
 $order = $sql->fetch(PDO::FETCH_OBJ);
 
@@ -38,6 +38,7 @@ if (!count($products)) {
     die();
 }
 ?>
+
 <html lang="">
 <head>
     <meta charset="UTF-8">
