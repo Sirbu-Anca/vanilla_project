@@ -35,7 +35,6 @@ $inputData = [
 
 $inputErrors = [];
 if (isset($_POST['submit'])) {
-
     if (isset($inputData['name'])) {
         if (strlen($inputData['name']) < 3) {
             $inputErrors['nameError'] = translate('The name should have more then 2 letters.');
