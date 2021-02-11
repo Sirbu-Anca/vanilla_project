@@ -35,13 +35,13 @@ $inputData = [
 
 $inputErrors = [];
 if (isset($_POST['submit'])) {
-    if (isset($inputData['name'])) {
+    if (!($inputData['name'])) {
         if (strlen($inputData['name']) < 3) {
             $inputErrors['nameError'] = translate('The name should have more then 2 letters.');
         }
     }
 
-    if (isset($inputData['contactDetails'])) {
+    if (!($inputData['contactDetails'])) {
         if (!filter_var($inputData['contactDetails'], FILTER_VALIDATE_EMAIL)) {
             $inputErrors['contactDetailsError'] = translate('Invalid email address!');
         }
