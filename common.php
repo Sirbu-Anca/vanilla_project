@@ -20,15 +20,15 @@ function translate($label)
     return isset($GLOBALS['translation'][$label]) ? $GLOBALS['translation'][$label] : $label;
 }
 
+function isAuthenticated()
+{
+    return (isset($_SESSION['isAuthenticated']) && $_SESSION['isAuthenticated']);
+}
+
 function checkForAuthentication()
 {
-    if (!isset($_SESSION['username']) && $_SESSION['username'] !== ADMIN_CREDENTIALS['username']) {
+    if (!isAuthenticated()) {
         header('Location: login.php');
         die();
     }
-}
-
-function imagePath($pathName)
-{
-    return substr(strstr($pathName, '/'), 1);
 }
