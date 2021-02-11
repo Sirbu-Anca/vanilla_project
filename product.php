@@ -148,6 +148,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     &nbsp;
     <input type="submit" name="save" value="<?= translate('Save') ?>">
 </form>
-
 </body>
 </html>
