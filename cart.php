@@ -28,28 +28,26 @@ if (count($_SESSION['cart']) > 0) {
 }
 
 $inputData = [
-    'name' => '',
-    'contactDetails' => '',
-    'comments' => '',
+    'name' => strip_tags($_POST['name'] ?? ''),
+    'contactDetails' => strip_tags($_POST['contactDetails'] ?? ''),
+    'comments' => strip_tags($_POST['comments'] ?? ''),
 ];
+
 $inputErrors = [];
 if (isset($_POST['submit'])) {
-    if (isset($_POST['name']) && $_POST['name']) {
-        $inputData['name'] = strip_tags($_POST['name']);
-    } else {
+
+    if (isset($inputData['name'])) {
         if (strlen($inputData['name']) < 3) {
             $inputErrors['nameError'] = translate('The name should have more then 2 letters.');
         }
     }
 
-    if (isset($_POST['contactDetails']) && $_POST['contactDetails']) {
-        $inputData['contactDetails'] = strip_tags($_POST['contactDetails']);
-    } else {
+    if (isset($inputData['contactDetails'])) {
         if (!filter_var($inputData['contactDetails'], FILTER_VALIDATE_EMAIL)) {
             $inputErrors['contactDetailsError'] = translate('Invalid email address!');
         }
     }
-    $inputData['comments'] = strip_tags($_POST['comments']);
+
     if (!count($inputErrors)) {
         ob_start();
         include 'mail.cart.php';
