@@ -1,24 +1,28 @@
 <?php
 
-require_once 'common.php';
+require_once('common.php');
 
-$inputData = [];
+if (isAuthenticated()) {
+    header('Location: products.php');
+    die();
+}
+
+$inputData['username'] = strip_tags($_POST['username'] ?? '');
+$inputData['password'] = strip_tags($_POST['password'] ?? '');
 $inputErrors = [];
 
 if (isset($_POST['submit'])) {
-    if ($_POST['username']) {
-        $inputData['username'] = strip_tags($_POST['username']);
-    } else {
+    if (!$inputData['username']) {
         $inputErrors['usernameError'] = translate('Enter a username');
     }
-    if ($_POST['password']) {
-        $inputData['password'] = strip_tags($_POST['password']);
-    } else {
+
+    if (!$inputData['password']) {
         $inputErrors['passwordError'] = translate('Enter a password');
     }
+
     if (!count($inputErrors)) {
         if ($inputData['username'] === ADMIN_CREDENTIALS['username'] && $inputData['password'] === ADMIN_CREDENTIALS['password']) {
-            $_SESSION['username'] = $inputData['username'];
+            $_SESSION['isAuthenticated'] = true;
             header('Location: products.php');
             die();
         }
@@ -40,20 +44,20 @@ if (isset($_POST['submit'])) {
 <body>
 <form action="login.php" method="post">
     <input type="text" name="username" placeholder="<?= translate('Username') ?>"
-           value="<?= isset($inputData['username']) ? $inputData['username'] : ''; ?>">
+           value="<?= $inputData['username'] ?? ''; ?>">
     <span class="error">
-        <?= isset($inputErrors['usernameError']) ? $inputErrors['usernameError'] : ''; ?>
+        <?= $inputErrors['usernameError'] ?? ''; ?>
     </span>
     <br><br>
     <input type="password" name="password" placeholder="<?= translate('Password') ?>"
-           value="<?= isset($inputData['password']) ? $inputData['password'] : ""; ?>">
+           value="<?= $inputData['password'] ?? ''; ?>">
     <span class="error">
-        <?= isset($inputErrors['passwordError']) ? $inputErrors['passwordError'] : ''; ?>
+        <?= $inputErrors['passwordError'] ?? ''; ?>
     </span>
     <br><br>
     <button type="submit" name="submit"><?= translate('Login') ?></button>
     <span class="error">
-        <?= isset($inputErrors['failedMessage']) ? $inputErrors['failedMessage'] : ''; ?>
+        <?= $inputErrors['failedMessage'] ?? ''; ?>
     </span>
 </form>
 
