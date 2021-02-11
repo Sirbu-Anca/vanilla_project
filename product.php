@@ -54,13 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         if (isset($_FILES['image']['name']) && $_FILES['image']['name']) {
             $imageFileType = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-                && $imageFileType != "gif" ) {
+            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif") {
                 $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');
             }
         }
         if ($_FILES['image']['size'] > 500000) {
-            $inputErrors['imageNameError'] =translate('Sorry, your file is too large.');
+            $inputErrors['imageNameError'] = translate('Sorry, your file is too large.');
         }
     }
 
