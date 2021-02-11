@@ -5,30 +5,32 @@ checkForAuthentication();
 $connection = getDbConnection();
 
 $orderId = $_GET['orderId'] ?? null;
+if (!$orderId || !is_numeric($orderId)) {
+    header('Location: orders.php');
+    die();
+}
 
 $sql = $connection->prepare(
-    'SELECT
-                   p.id,
-                   p.title,
-                   p.description,
-                   p.image,
-                   op.product_price
-        FROM order_products op
-            INNER JOIN products p ON op.product_id = p.id
-            INNER JOIN orders o ON op.order_id = o.id
-        WHERE o.id = ?');
+    'SELECT p.id,
+                  p.title,
+                  p.description,
+                  p.image,
+                  op.product_price
+           FROM order_products op
+                 INNER JOIN products p ON op.product_id = p.id
+                 INNER JOIN orders o ON op.order_id = o.id
+           WHERE o.id = ?');
 $sql->execute([$orderId]);
 $products = $sql->fetchAll(PDO::FETCH_OBJ);
 
 $sql = $connection->prepare(
-    'SELECT
-            o.name,
-            o.address,
-            o.comments,
-            o.creation_date
-        FROM order_products op 
-            INNER JOIN orders o ON op.order_id = o.id
-        WHERE o.id = ?');
+    'SELECT o.name,
+                  o.address,
+                  o.comments,
+                  o.creation_date
+            FROM order_products op 
+                  INNER JOIN orders o ON op.order_id = o.id
+            WHERE o.id = ?');
 $sql->execute([$orderId]);
 $order = $sql->fetch(PDO::FETCH_OBJ);
 
