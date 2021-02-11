@@ -4,7 +4,7 @@ require_once ('common.php');
 checkForAuthentication();
 $connection = getDbConnection();
 if (isset($_POST['logout'])) {
-    unset($_SESSION['authenticated']);
+    unset($_SESSION['isAuthenticated']);
     header('Location: login.php');
     die();
 }
