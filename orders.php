@@ -5,10 +5,11 @@ checkForAuthentication();
 $connection = getDbConnection();
 
 $sql = $connection->prepare(
-    'SELECT o.id, SUM(op.product_price) totalAmount
-        FROM orders o
-            INNER JOIN order_products op ON o.id = op.order_id
-        GROUP BY o.id');
+    'SELECT o.id, 
+                  SUM(op.product_price) as totalAmount
+           FROM orders o
+                INNER JOIN order_products op ON o.id = op.order_id
+           GROUP BY o.id');
 $sql->execute();
 $orders = $sql->fetchAll(PDO::FETCH_OBJ);
 
