@@ -17,7 +17,7 @@ function getDbConnection()
 $translation = [];
 function translate($label)
 {
-    return isset($GLOBALS['translation'][$label]) ? $GLOBALS['translation'][$label] : $label;
+    return $GLOBALS['translation'][$label] ?? $label;
 }
 
 function isAuthenticated()
