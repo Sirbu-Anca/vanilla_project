@@ -58,9 +58,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($_FILES['image']['size'] > 500000) {
             $inputErrors['imageNameError'] = translate('Sorry, your file is too large.');
         }
-        
-        if (empty($inputErrors['imageNameError']) && $_FILES['image']['error'] === 0) {
-            echo 'There is no error, the file uploaded with success';
+    }
+    $uploadErrors = [
+        1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+        2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+        3 => 'The uploaded file was only partially uploaded',
+        4 => 'No file was uploaded',
+        6 => 'Missing a temporary folder',
+    ];
+
+    if (empty($inputErrors['imageNameError']) && $_FILES['image']['error'] === 0) {
+        echo 'There is no error, the file uploaded with success';
+    } else {
+        foreach ($uploadErrors as $key => $error) {
+            if ($_FILES['image']['error'] === $key) {
+                echo $error;
+                break;
+            }
         }
     }
 
@@ -131,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?= $inputErrors['priceError'] ?? '' ?>
     </span>
     <br><br>
+    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
     <input type="file" id="image" name="image" placeholder="<?= translate('Image') ?>">
     <span class="error">
         <?= $inputErrors['imageNameError'] ?? '' ?>
