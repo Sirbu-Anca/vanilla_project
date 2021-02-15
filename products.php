@@ -1,6 +1,6 @@
 <?php
 
-require_once ('common.php');
+require_once 'common.php';
 checkForAuthentication();
 $connection = getDbConnection();
 if (isset($_POST['logout'])) {
