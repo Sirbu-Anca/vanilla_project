@@ -49,9 +49,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
         if (isset($_FILES['image']['name']) && $_FILES['image']['name']) {
-            $imageFileType = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-            if (!in_array($imageFileType, ['jpg', 'png', 'gif'])) {
-                $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');
+            $imageFileType = mime_content_type($_FILES['image']['tmp_name']);
+            $image = [
+                'png' => 'image/png',
+                'jpe' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'jpg' => 'image/jpeg',
+                'gif' => 'image/gif',
+                'bmp' => 'image/bmp',
+            ];
+            if (!in_array($imageFileType, $image)) {
+                $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG, GIF, JPE, BMP files are allowed.');
             }
         }
 
@@ -145,7 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?= $inputErrors['priceError'] ?? '' ?>
     </span>
     <br><br>
-    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
     <input type="file" id="image" name="image" placeholder="<?= translate('Image') ?>">
     <span class="error">
         <?= $inputErrors['imageNameError'] ?? '' ?>
