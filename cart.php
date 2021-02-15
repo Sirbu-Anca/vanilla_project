@@ -1,9 +1,9 @@
 <?php
 
-require_once('common.php');
+require_once 'common.php';
 $connection = getDbConnection();
 
-if (isset($_POST['add_id'])) {
+if (isset($_POST['addId'])) {
     $_SESSION['cart'][$_POST['add_id']] = $_POST['add_id'];
     header('Location: index.php');
     die();
@@ -35,16 +35,20 @@ $inputData = [
 
 $inputErrors = [];
 if (isset($_POST['submit'])) {
-    if (!($inputData['name'])) {
-        if (strlen($inputData['name']) < 3) {
-            $inputErrors['nameError'] = translate('The name should have more then 2 letters.');
-        }
+    if (empty($inputData['name'])) {
+        $inputErrors['nameError'] = translate('Please enter a name');
     }
 
-    if (!($inputData['contactDetails'])) {
-        if (!filter_var($inputData['contactDetails'], FILTER_VALIDATE_EMAIL)) {
-            $inputErrors['contactDetailsError'] = translate('Invalid email address!');
-        }
+    if (!empty($inputData['name']) && strlen($inputData['name']) < 3) {
+        $inputErrors['nameError'] = translate('The name should have more then 2 letters.');
+    }
+
+    if (empty($inputData['contactDetails'])) {
+        $inputErrors['contactDetailsError'] = translate('Please enter your contact details and an email address!');
+    }
+
+    if (!empty($inputData['contactDetails']) && !filter_var($inputData['contactDetails'], FILTER_VALIDATE_EMAIL)) {
+        $inputErrors['contactDetailsError'] = translate('Invalid email address!');
     }
 
     if (!count($inputErrors)) {
