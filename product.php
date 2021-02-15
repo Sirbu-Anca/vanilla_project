@@ -86,9 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $pathImage = 'uploads/' . time() . $_FILES['image']['name'];
     if (!count($inputErrors)) {
-        move_uploaded_file($_FILES['image']['tmp_name'], $pathImage);
+        $pathImage = 'uploads/' . time() . $_FILES['image']['name'];
         $sql = '';
         $parameters = [
             $_POST['title'],
@@ -112,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = ('INSERT INTO products (title, description, price, image) VALUES( ?, ?, ?, ?)');
             array_push($parameters, $pathImage);
         }
+        move_uploaded_file($_FILES['image']['tmp_name'], $pathImage);
         $insertUpdateProduct = $connection->prepare($sql);
         $insertUpdateProduct->execute($parameters);
         header('Location: products.php');
