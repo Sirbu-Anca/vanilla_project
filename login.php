@@ -1,6 +1,6 @@
 <?php
 
-require_once('common.php');
+require_once 'common.php';
 
 if (isAuthenticated()) {
     header('Location: products.php');
