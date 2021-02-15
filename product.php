@@ -81,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($uploadErrors as $key => $error) {
             if ($_FILES['image']['error'] === $key) {
                 echo $error;
-                break;
             }
         }
     }
