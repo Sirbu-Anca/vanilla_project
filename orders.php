@@ -40,7 +40,7 @@ if (!count($orders)) {
                 <?= $order->id ?>
             </td>
             <td>
-                <?= $order->totalAmount ?> <?= translate("eur") ?>
+                <?= $order->totalAmount ?> <?= translate('eur') ?>
             </td>
             <td>
                 <a href="order.php?orderId=<?= $order->id ?>"> <?= translate('Show order details') ?> </a>
