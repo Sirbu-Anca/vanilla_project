@@ -1,6 +1,6 @@
 <?php
 
-require_once('common.php');
+require_once 'common.php';
 checkForAuthentication();
 $connection = getDbConnection();
 
@@ -10,27 +10,17 @@ if (!$orderId || !is_numeric($orderId)) {
     die();
 }
 
-$sql = $connection->prepare(
-    'SELECT p.id,
-              p.title,
-              p.description,
-              p.image,
-              op.product_price
-       FROM order_products op
-            INNER JOIN products p ON op.product_id = p.id
-            INNER JOIN orders o ON op.order_id = o.id
-       WHERE o.id = ?');
+$sql = $connection->prepare('SELECT p.id, p.title, p.description, p.image, op.product_price
+    FROM order_products op
+        INNER JOIN products p ON op.product_id = p.id
+        INNER JOIN orders o ON op.order_id = o.id
+    WHERE o.id = ?');
 $sql->execute([$orderId]);
 $products = $sql->fetchAll(PDO::FETCH_OBJ);
 
-$sql = $connection->prepare(
-    'SELECT o.name,
-              o.address,
-              o.comments,
-              o.creation_date
-       FROM order_products op 
-              INNER JOIN orders o ON op.order_id = o.id
-       WHERE o.id = ?');
+$sql = $connection->prepare('SELECT o.name, o.address, o.comments, o.creation_date
+        FROM orders o     
+        WHERE o.id = ?');
 $sql->execute([$orderId]);
 $order = $sql->fetch(PDO::FETCH_OBJ);
 
@@ -55,7 +45,7 @@ if (!count($products)) {
         <td>
             <p>
                 <?= translate('Date: ') ?>
-                <?= isset($order->creation_date) ? $order->creation_date : '' ?>
+                <?= $order->creation_date ?>
             </p>
         </td>
     </tr>
@@ -63,7 +53,7 @@ if (!count($products)) {
         <td>
             <p>
                 <?= translate('Name: ') ?>
-                <?= isset($order->name) ? $order->name : '' ?>
+                <?= $order->name ?>
             </p>
         </td>
     </tr>
@@ -71,7 +61,7 @@ if (!count($products)) {
         <td>
             <p>
                 <?= translate('Address: ') ?>
-                <?= isset($order->address) ? $order->address : '' ?>
+                <?= $order->address ?>
             </p>
         </td>
     </tr>
@@ -79,7 +69,7 @@ if (!count($products)) {
         <td>
             <p>
                 <?= translate('Comments: ') ?>
-                <?= isset($order->comments) ? $order->comments : '' ?>
+                <?= $order->comments ?>
             </p>
         </td>
     </tr>
