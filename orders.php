@@ -1,15 +1,14 @@
 <?php
 
-require_once('common.php');
+require_once 'common.php';
 checkForAuthentication();
 $connection = getDbConnection();
 
-$sql = $connection->prepare(
-    'SELECT o.id, 
-                  SUM(op.product_price) as totalAmount
-           FROM orders o
-                INNER JOIN order_products op ON o.id = op.order_id
-           GROUP BY o.id');
+$sql = $connection->prepare('SELECT o.id, SUM(op.product_price) as totalAmount 
+    FROM orders o 
+        INNER JOIN order_products op ON o.id = op.order_id 
+    GROUP BY o.id');
+
 $sql->execute();
 $orders = $sql->fetchAll(PDO::FETCH_OBJ);
 
@@ -41,8 +40,7 @@ if (!count($orders)) {
                 <?= $order->id ?>
             </td>
             <td>
-                <?= $order->totalAmount ?>
-                <?= translate("eur") ?>
+                <?= $order->totalAmount ?> <?= translate("eur") ?>
             </td>
             <td>
                 <a href="order.php?orderId=<?= $order->id ?>"> <?= translate('Show order details') ?> </a>
