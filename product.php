@@ -1,6 +1,6 @@
 <?php
 
-require_once('common.php');
+require_once 'common.php';
 checkForAuthentication();
 $connection = getDbConnection();
 
@@ -48,60 +48,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
-        $check = getimagesize($_FILES['image']['tmp_name']);
-        if ($check === false) {
-            $inputErrors['imageNameError'] = translate('File is not an image');
-        }
         if (isset($_FILES['image']['name']) && $_FILES['image']['name']) {
             $imageFileType = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-                && $imageFileType != "gif") {
+            if (!in_array($imageFileType, ['jpg', 'png', 'gif'])) {
                 $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');
             }
         }
+
         if ($_FILES['image']['size'] > 500000) {
             $inputErrors['imageNameError'] = translate('Sorry, your file is too large.');
+        }
+        
+        if (empty($inputErrors['imageNameError']) && $_FILES['image']['error'] === 0) {
+            echo 'There is no error, the file uploaded with success';
         }
     }
 
     $pathImage = 'uploads/' . time() . $_FILES['image']['name'];
     if (!count($inputErrors)) {
+        move_uploaded_file($_FILES['image']['tmp_name'], $pathImage);
+        $sql = '';
+        $parameters = [
+            $_POST['title'],
+            $_POST['description'],
+            $_POST['price']
+        ];
         if ($editProductId) {
             if (empty($_FILES['image']['name'])) {
                 $sql = 'UPDATE products SET title= ?, description= ?, price= ? WHERE id= ?';
-                $parameters = [
-                    $_POST['title'],
-                    $_POST['description'],
-                    $_POST['price'],
-                    $editProductId,
-                ];
+                array_push($parameters, $editProductId);
+
             } else {
-                move_uploaded_file($_FILES['image']['tmp_name'], $pathImage);
                 $sql = 'UPDATE products SET title= ?, description= ?, price= ?, image= ? WHERE id= ?';
-                $parameters = [
-                    $_POST['title'],
-                    $_POST['description'],
-                    $_POST['price'],
-                    $pathImage,
-                    $editProductId,
-                ];
+                array_push($parameters, $pathImage, $editProductId);
+
                 if (isset($product->image) && file_exists($product->image)) {
                     unlink($product->image);
                 }
             }
-            $updateProduct = $connection->prepare($sql);
-            $updateProduct->execute($parameters);
-            header('Location: products.php');
-            die();
-
         } else {
-            move_uploaded_file($_FILES['image']['tmp_name'], $pathImage);
-            $sql = $connection->prepare(
-                'INSERT INTO products (title, description, price, image) VALUES( ?, ?, ?, ?)');
-            $sql->execute([$_POST['title'], $_POST['description'], $_POST['price'], $pathImage]);
-            header('Location: products.php');
-            die();
+            $sql = ('INSERT INTO products (title, description, price, image) VALUES( ?, ?, ?, ?)');
+            array_push($parameters, $pathImage);
         }
+        $insertUpdateProduct = $connection->prepare($sql);
+        $insertUpdateProduct->execute($parameters);
+        header('Location: products.php');
+        die();
     }
 }
 ?>
