@@ -74,9 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 4 => 'No file was uploaded',
                 5 => 'Missing a temporary folder',
                 6 => 'Failed to write file to disk.',
-                7 => 'A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension 
-        caused the file upload to stop; examining the list of loaded extensions with phpinfo() may help.',
-                ];
+                7 => 'A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop; examining the list of loaded extensions with phpinfo() may help.',
+            ];
             $inputErrors['imageNameError'] = $uploadErrors[$_FILES['image']['error']] ?? 'Image upload error.';
         }
     }
