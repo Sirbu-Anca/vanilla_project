@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
-        if ($_FILES['image']['error'] === 0 ) {
+        if ($_FILES['image']['error'] === 0) {
             if (isset($_FILES['image']['name']) && $_FILES['image']['name']) {
                 $imageFileType = mime_content_type($_FILES['image']['tmp_name']);
                 $image = [
@@ -147,7 +147,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?= $inputErrors['priceError'] ?? '' ?>
     </span>
     <br><br>
-<!--    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />-->
     <input type="file" id="image" name="image" placeholder="<?= translate('Image') ?>">
     <span class="error">
         <?= $inputErrors['imageNameError'] ?? '' ?>
