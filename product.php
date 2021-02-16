@@ -147,7 +147,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?= $inputErrors['priceError'] ?? '' ?>
     </span>
     <br><br>
-    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
     <input type="file" id="image" name="image" placeholder="<?= translate('Image') ?>">
     <span class="error">
         <?= $inputErrors['imageNameError'] ?? '' ?>
