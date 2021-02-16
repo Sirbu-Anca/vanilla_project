@@ -48,40 +48,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
-        if (isset($_FILES['image']['name']) && $_FILES['image']['name']) {
-            $imageFileType = mime_content_type($_FILES['image']['tmp_name']);
-            $image = [
-                'png' => 'image/png',
-                'jpe' => 'image/jpeg',
-                'jpeg' => 'image/jpeg',
-                'jpg' => 'image/jpeg',
-                'gif' => 'image/gif',
-                'bmp' => 'image/bmp',
-            ];
-            if (!in_array($imageFileType, $image)) {
-                $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG, GIF, JPE, BMP files are allowed.');
+        if ($_FILES['image']['error'] === 0 ) {
+            if (isset($_FILES['image']['name']) && $_FILES['image']['name']) {
+                $imageFileType = mime_content_type($_FILES['image']['tmp_name']);
+                $image = [
+                    'png' => 'image/png',
+                    'jpe' => 'image/jpeg',
+                    'jpeg' => 'image/jpeg',
+                    'jpg' => 'image/jpeg',
+                    'gif' => 'image/gif',
+                    'bmp' => 'image/bmp',
+                ];
+                if (!in_array($imageFileType, $image)) {
+                    $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG, GIF, JPE, BMP files are allowed.');
+                }
             }
-        }
-
-        if ($_FILES['image']['size'] > 500000) {
-            $inputErrors['imageNameError'] = translate('Sorry, your file is too large.');
-        }
-    }
-    $uploadErrors = [
-        1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-        2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
-        3 => 'The uploaded file was only partially uploaded',
-        4 => 'No file was uploaded',
-        6 => 'Missing a temporary folder',
-    ];
-
-    if (empty($inputErrors['imageNameError']) && $_FILES['image']['error'] === 0) {
-        echo 'There is no error, the file uploaded with success';
-    } else {
-        foreach ($uploadErrors as $key => $error) {
-            if ($_FILES['image']['error'] === $key) {
-                echo $error;
+            if ($_FILES['image']['size'] > 500000) {
+                $inputErrors['imageNameError'] = translate('Sorry, your file is too large.');
             }
+        } else {
+            $uploadErrors = [
+                1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+                2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+                3 => 'The uploaded file was only partially uploaded',
+                4 => 'No file was uploaded',
+                5 => 'Missing a temporary folder',
+                6 => 'Failed to write file to disk.',
+                7 => 'A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension 
+        caused the file upload to stop; examining the list of loaded extensions with phpinfo() may help.',
+                ];
+            $inputErrors['imageNameError'] = $uploadErrors[$_FILES['image']['error']] ?? 'Image upload error.';
         }
     }
 
@@ -107,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         } else {
-            $sql = ('INSERT INTO products (title, description, price, image) VALUES( ?, ?, ?, ?)');
+            $sql = 'INSERT INTO products (title, description, price, image) VALUES( ?, ?, ?, ?)';
             array_push($parameters, $pathImage);
         }
         move_uploaded_file($_FILES['image']['tmp_name'], $pathImage);
@@ -152,6 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?= $inputErrors['priceError'] ?? '' ?>
     </span>
     <br><br>
+<!--    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />-->
     <input type="file" id="image" name="image" placeholder="<?= translate('Image') ?>">
     <span class="error">
         <?= $inputErrors['imageNameError'] ?? '' ?>
