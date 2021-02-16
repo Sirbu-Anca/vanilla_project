@@ -43,41 +43,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inputErrors['priceError'] = translate('Please enter a number for product price.');
     }
 
-    if (!$editProductId && (!isset($_FILES['image']['tmp_name']) || !$_FILES['image']['tmp_name'])) {
+    if (!$editProductId && (!isset($_FILES['image']) || !$_FILES['image'])) {
         $inputErrors['imageNameError'] = translate('Please choose an image.');
     }
 
-    if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
-        if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            if (isset($_FILES['image']['name']) && $_FILES['image']['name']) {
-                $imageFileType = mime_content_type($_FILES['image']['tmp_name']);
-                $image = [
-                    'png' => 'image/png',
-                    'jpe' => 'image/jpeg',
-                    'jpeg' => 'image/jpeg',
-                    'jpg' => 'image/jpeg',
-                    'gif' => 'image/gif',
-                    'bmp' => 'image/bmp',
-                ];
-                if (!in_array($imageFileType, $image)) {
-                    $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG, GIF, JPE, BMP files are allowed.');
-                }
-            }
-            if ($_FILES['image']['size'] > 500000) {
-                $inputErrors['imageNameError'] = translate('Sorry, your file is too large.');
-            }
-        } else {
-            $uploadErrors = [
-                UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-                UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
-                UPLOAD_ERR_PARTIAL => 'The uploaded file was only partially uploaded',
-                UPLOAD_ERR_NO_FILE => 'No file was uploaded',
-                UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',
-                UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
-                UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop; examining the list of loaded extensions with phpinfo() may help.',
-            ];
-            $inputErrors['imageNameError'] = $uploadErrors[$_FILES['image']['error']] ?? 'Image upload error.';
+    if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $imageFileType = mime_content_type($_FILES['image']['tmp_name']);
+        $image = [
+            'png' => 'image/png',
+            'jpe' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'jpg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'bmp' => 'image/bmp',
+        ];
+
+        if (!in_array($imageFileType, $image)) {
+            $inputErrors['imageNameError'] = translate('Sorry, only JPG, JPEG, PNG, GIF, JPE, BMP files are allowed.');
         }
+
+        if ($_FILES['image']['size'] > 500000) {
+            $inputErrors['imageNameError'] = translate('Sorry, your file is too large.');
+        }
+
+    } else {
+        $uploadErrors = [
+            UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+            UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+            UPLOAD_ERR_PARTIAL => 'The uploaded file was only partially uploaded',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+            UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop; examining the list of loaded extensions with phpinfo() may help.',
+        ];
+        $inputErrors['imageNameError'] = $uploadErrors[$_FILES['image']['error']] ?? 'Image upload error.';
     }
 
     if (!count($inputErrors)) {
