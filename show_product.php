@@ -100,9 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <label for="rate2">2</label>
     <input type="radio" id="rate3" name="rate" title="Acceptable" value="3">
     <label for="rate3">3</label>
-    <input type="radio" id="rate3" name="rate" title="Good" value="4">
+    <input type="radio" id="rate4" name="rate" title="Good" value="4">
     <label for="rate3">4</label>
-    <input type="radio" id="rate3" name="rate" title="Excellent" value="5">
+    <input type="radio" id="rate5" name="rate" title="Excellent" value="5">
     <label for="rate3">5</label>
     <span class="error">
         <?= $inputErrors['rateError'] ?? ''; ?>
