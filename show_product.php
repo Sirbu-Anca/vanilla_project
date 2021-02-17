@@ -13,6 +13,11 @@ $sql = $connection->prepare('SELECT * FROM products WHERE id = ?');
 $sql->execute([$productId]);
 $product = $sql->fetch(PDO::FETCH_OBJ);
 
+if (!$product) {
+    header('Location: index.php');
+    die();
+}
+
 $sql = $connection->prepare('SELECT comment, rating, creation_date FROM reviews WHERE product_id = ? ORDER BY creation_date');
 $sql->execute([$productId]);
 $reviews = $sql->fetchAll(PDO::FETCH_OBJ);
@@ -20,7 +25,7 @@ $reviews = $sql->fetchAll(PDO::FETCH_OBJ);
 $inputData['comments'] = strip_tags($_POST['comments'] ?? '');
 $inputData['rate'] = strip_tags($_POST['rate'] ?? null);
 $inputErrors = [];
-if (isset($_POST['save'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($inputData['comments'])) {
         $inputErrors['commentsError'] = translate('Please enter your review.');
     } else {
@@ -103,7 +108,7 @@ if (isset($_POST['save'])) {
         <?= $inputErrors['rateError'] ?? ''; ?>
     </span>
     <br><br>
-    <button type="submit" name="save"><?= translate('Save') ?> </button>
+    <button type="submit" ><?= translate('Save') ?> </button>
 </form>
 </body>
 </html>

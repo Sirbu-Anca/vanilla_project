@@ -24,9 +24,6 @@ $sql = $connection->prepare('SELECT r.id, r.comment, r.rating, p.title
 $sql->execute();
 $reviews = $sql->fetchAll(PDO::FETCH_OBJ);
 
-if (!count($reviews)) {
-    die();
-}
 ?>
 
 <html>
@@ -38,6 +35,7 @@ if (!count($reviews)) {
     <title><?= translate('Reviews') ?></title>
 </head>
 <body>
+<?php if (count($reviews)) :?>
 <table>
     <tr>
         <th><?= translate('Id') ?></th>
@@ -71,3 +69,6 @@ if (!count($reviews)) {
 </table>
 </body>
 </html>
+<?php else :?>
+<p><?= translate('No reviews!')?> </p>
+<?php endif;?>
