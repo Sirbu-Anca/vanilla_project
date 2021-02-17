@@ -37,6 +37,9 @@ $products = $stm->fetchAll(PDO::FETCH_OBJ);
                 <?= $product->price ?><?= translate(' eur') ?> <br><br>
             </td>
             <td>
+                <a href="show_product.php?showProduct=<?= $product->id ?>"><?= translate('Show') ?></a>
+            </td>
+            <td>
                 <form action="cart.php" method="post">
                     <input type="hidden" name="add_id" value="<?= $product->id ?>">
                     <button type="submit" name="submit"> <?= translate('Add') ?></button>
