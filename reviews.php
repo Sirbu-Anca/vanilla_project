@@ -67,8 +67,9 @@ $reviews = $sql->fetchAll(PDO::FETCH_OBJ);
         </tr>
     <?php endforeach; ?>
 </table>
+<?php else :?>
+    <p><?= translate('No reviews!')?> </p>
+<?php endif;?>
 </body>
 </html>
-<?php else :?>
-<p><?= translate('No reviews!')?> </p>
-<?php endif;?>
+
