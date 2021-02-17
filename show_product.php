@@ -38,6 +38,7 @@ if (isset($_POST['save'])) {
         $sql = $connection->prepare('INSERT INTO reviews (product_id, comment, rating , creation_date) VALUES( ?, ?, ?, ?)');
         $sql->execute([$productId, $inputData['comments'], $inputData['rate'], $creationDate,]);
         header('Location: show_product.php?showProduct=' . $productId);
+        die();
     }
 }
 ?>
@@ -73,14 +74,14 @@ if (isset($_POST['save'])) {
     <ul>
         <li>
             <?= date('Y-m-d', strtotime($review->creation_date)) ?>
-            <?= translate('Rate:') ?><?= $review->rating ?> <?= '/5' ?>
+            <?= translate('Rate: ') ?><?= $review->rating ?> <?= '/ 5' ?>
             <i class="fa fa-star" style="font-size:20px;color:orange;"></i>
             <br>
             <?= $review->comment ?>
         </li>
     </ul>
 <?php endforeach; ?>
-<p><?= translate('Leave a review') ?></p>
+<h4><?= translate('Leave a review') ?></h4>
 <form action="" method="post">
     <textarea name="comments" cols="22" rows="3"
               placeholder="<?= translate('Comments') ?>"><?= $inputData['comments'] ?></textarea>
